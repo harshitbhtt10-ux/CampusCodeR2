@@ -182,13 +182,24 @@ function campusIllustration(interactive = false) {
 }
 
 function authStory(kind) {
-  if (kind === "register") {
-    return '<section class="auth-story"><span class="eyebrow">Create Account</span><h1>Join the<br>CampusCode <span class="highlight">Community.</span></h1>' +
-      '<p>Be part of a student-first hackathon platform built for builders like you.</p>' + campusIllustration() + '</section>';
-  }
-  return '<section class="auth-story"><h1>Build.<br>Compete.<br>Ship. Together<br>on <span class="highlight">CampusCode.</span></h1>' +
-    '<ul class="check-list"><li><span class="check">✓</span>Join hackathons</li><li><span class="check">✓</span>Submit your projects</li><li><span class="check">✓</span>Track results & get certified</li></ul>' +
-    campusIllustration(true) + '</section>';
+  const isRegister = kind === "register";
+  const step = isRegister ? "02" : "01";
+  const eyebrow = isRegister ? "START YOUR BUILD LOOP" : "PICK UP YOUR BUILD LOOP";
+  const heading = isRegister
+    ? 'Make room for<br>your next <span class="highlight">big idea.</span>'
+    : 'Your next build<br>is waiting <span class="highlight">here.</span>';
+  const copy = isRegister
+    ? "Set up your builder profile and start finding challenges, teammates, and reasons to ship."
+    : "Pick up your project, reconnect with your team, and keep moving toward the next ship.";
+  return '<section class="auth-story auth-story-' + kind + '" aria-labelledby="auth-story-heading">' +
+    '<div class="auth-story-meta"><span class="auth-story-index">' + step + ' / 02</span><span class="auth-story-meta-line"></span><span>BUILDER ENTRY</span></div>' +
+    '<div class="auth-story-copy"><span class="eyebrow">' + eyebrow + '</span><h1 id="auth-story-heading">' + heading + '</h1><p>' + copy + '</p></div>' +
+    '<div class="auth-build-stage" aria-label="CampusCode build path">' +
+    '<div class="auth-stage-orbit orbit-a" aria-hidden="true"></div><div class="auth-stage-orbit orbit-b" aria-hidden="true"></div>' +
+    '<div class="auth-stage-badge"><span class="auth-stage-signal"></span><span>CAMPUSCODE / BUILD LOOP</span><span class="auth-stage-badge-mark">///</span></div>' +
+    campusIllustration(!isRegister) +
+    '<div class="auth-stage-cards" aria-label="Find, build, and ship"><div class="auth-stage-card"><span>01 / FIND</span><strong>A challenge</strong></div><div class="auth-stage-card"><span>02 / BUILD</span><strong>A team</strong></div><div class="auth-stage-card"><span>03 / SHIP</span><strong>Your work</strong></div></div>' +
+    '</div><div class="auth-story-footer"><span>IDEAS START HERE</span><span class="auth-story-footer-line"></span><span>BUILD · COMPETE · SHIP</span></div></section>';
 }
 
 function field(name, label, placeholder, type, iconName, extra) {
@@ -200,7 +211,7 @@ function field(name, label, placeholder, type, iconName, extra) {
 
 function renderLogin() {
   return '<div class="site-shell">' + header("login") + '<main class="auth-shell">' + authStory("login") +
-    '<section class="auth-card"><h2>Login to your account</h2><p class="card-subtitle">Access your CampusCode dashboard</p>' +
+    '<section class="auth-card auth-card-login"><div class="auth-card-head"><span class="auth-card-kicker">MEMBER ACCESS / 01</span><span class="auth-card-badge"><i>CC</i> DEMO SPACE</span></div><h2>Welcome back,<br><span class="auth-heading-highlight">builder.</span></h2><p class="card-subtitle">Your projects and next challenges are ready.</p>' +
     '<form id="login-form" novalidate>' + field("login-id", "CampusCode ID / Email", "Enter your CampusCode ID or email", "text", "mail", ' autocomplete="username"') +
     field("login-password", "Password", "Enter your password", "password", "lock", ' autocomplete="current-password"') +
     '<div class="forgot-row"><button type="button" data-forgot>Forgot password?</button></div>' +
@@ -212,7 +223,7 @@ function renderLogin() {
 
 function renderRegister() {
   return '<div class="site-shell">' + header("register") + '<main class="auth-shell register">' + authStory("register") +
-    '<section class="auth-card"><h2>Create your account</h2><p class="card-subtitle">Register and start building today.</p>' +
+    '<section class="auth-card auth-card-register"><div class="auth-card-head"><span class="auth-card-kicker">NEW BUILDER / 02</span><span class="auth-card-badge"><i>CC</i> START HERE</span></div><h2>Create your<br><span class="auth-heading-highlight">builder profile.</span></h2><p class="card-subtitle">One profile for challenges, teams, and project updates.</p>' +
     '<form id="register-form" novalidate>' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"') +
     field("register-email", "Email", "Enter your email", "email", "mail", ' autocomplete="email"') +
     field("register-password", "Password", "Create a password", "password", "lock", ' autocomplete="new-password"') +
