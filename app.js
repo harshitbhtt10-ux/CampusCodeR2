@@ -85,10 +85,10 @@ function header(route, section) {
   }
   return '<header class="site-header">' + brand() +
     '<nav class="primary-nav" id="primary-nav" aria-label="Main navigation">' +
-    '<a class="' + (section !== "events" ? "active" : "") + '" href="#/home">Home</a>' +
+    '<a class="' + (section === "dashboard" ? "active" : "") + '" href="#/home">Home</a>' +
     '<a class="' + (section === "events" ? "active" : "") + '" href="#/home/events">Hackathons</a>' +
-    '<a href="#/home/community" data-demo-feature="Community">Community</a>' +
-    '<a href="#/home/about" data-demo-feature="About">About</a>' +
+    '<a class="' + (section === "community" ? "active" : "") + '" href="#/home/community">Community</a>' +
+    '<a class="' + (section === "about" ? "active" : "") + '" href="#/home/about">About</a>' +
     '<a class="mobile-only" href="#/login">Login</a><a class="mobile-only" href="#/register">Register</a></nav>' +
     '<div class="header-actions"><a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
     '<button class="mobile-menu" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu>' + icon("grid") + '</button></div></header>';
@@ -121,8 +121,28 @@ function hackathonFlashcard(event, index, total) {
     '<div class="flashcard-footer"><span><small>BUILD · COMPETE · SHIP</small><strong>Make your next idea real.</strong></span><a class="flashcard-link" href="#/home/events">Explore event ' + icon("arrow") + '</a></div></div></article>';
 }
 
-function feature(iconName, title, copy) {
-  return '<div class="feature"><span class="feature-icon">' + icon(iconName) + '</span><span><strong>' + title + '</strong><small>' + copy + '</small></span></div>';
+function communitySection() {
+  return '<section class="landing-section community-section" id="community" aria-labelledby="community-heading">' +
+    '<div class="section-kicker">CAMPUSCODE COMMUNITY / 01</div><div class="community-heading-row"><div><h2 id="community-heading">Good ideas find<br><span class="highlight">their people.</span></h2><p>Make space for the conversations, collaboration, and small wins that turn a campus idea into a project.</p></div><span class="community-stamp">OPEN<br>BY DESIGN</span></div>' +
+    '<div class="community-layout"><div class="community-orbit" role="img" aria-label="Ideas connect builders, teams, and campuses">' +
+    '<span class="orbit-ring ring-one"></span><span class="orbit-ring ring-two"></span><span class="orbit-ring ring-three"></span>' +
+    '<div class="orbit-core"><small>START WITH</small><strong>AN IDEA</strong><span class="orbit-core-mark">///</span></div>' +
+    '<span class="orbit-node orbit-node-one"><i>01</i>BUILDERS</span><span class="orbit-node orbit-node-two"><i>02</i>TEAMS</span><span class="orbit-node orbit-node-three"><i>03</i>CAMPUSES</span></div>' +
+    '<div class="community-explorer"><div class="community-choices" role="group" aria-label="Explore the CampusCode community">' +
+    '<button class="community-choice active" type="button" data-community-mode="collaborate" aria-pressed="true"><span>01</span>Find your crew' + icon("arrow") + '</button>' +
+    '<button class="community-choice" type="button" data-community-mode="share" aria-pressed="false"><span>02</span>Share the progress' + icon("arrow") + '</button>' +
+    '<button class="community-choice" type="button" data-community-mode="ship" aria-pressed="false"><span>03</span>Celebrate the ship' + icon("arrow") + '</button></div>' +
+    '<article class="community-message" aria-live="polite"><span class="community-message-kicker" data-community-kicker>WORK BETTER, TOGETHER</span><h3 data-community-title>Meet the people behind your next good idea.</h3><p data-community-copy>Find collaborators, share what you are learning, and build with students who are ready to make something real.</p><a class="text-link" href="#/register">Join the community ' + icon("arrow") + '</a></article></div></div></section>';
+}
+
+function aboutSection() {
+  return '<section class="landing-section about-section" id="about" aria-labelledby="about-heading">' +
+    '<div class="about-intro"><span class="section-kicker">WHY CAMPUSCODE / 02</span><h2 id="about-heading">From campus<br>curiosity to <span class="highlight">shipped.</span></h2><p>CampusCode gives student builders one clear path through the work: find a challenge, make it with a team, and show what you shipped.</p><a class="text-link" href="#/home/events">Explore hackathons ' + icon("arrow") + '</a></div>' +
+    '<div class="about-journey"><div class="journey-steps" role="group" aria-label="Explore the CampusCode journey">' +
+    '<button class="journey-step active" type="button" data-journey-step="discover" aria-pressed="true"><span>01</span><strong>Find a challenge</strong><small>Start with a brief</small></button>' +
+    '<button class="journey-step" type="button" data-journey-step="build" aria-pressed="false"><span>02</span><strong>Build together</strong><small>Make it with a team</small></button>' +
+    '<button class="journey-step" type="button" data-journey-step="ship" aria-pressed="false"><span>03</span><strong>Ship your work</strong><small>Show what you made</small></button></div>' +
+    '<article class="journey-panel" aria-live="polite"><div class="journey-panel-top"><span data-journey-label>STEP 01 / DISCOVER</span><span class="journey-pulse"><i></i> THE BUILD PATH</span></div><h3 data-journey-title>Pick a problem you care about.</h3><p data-journey-copy>Browse student challenges, explore the brief, and choose a problem worth your team’s time.</p><div class="journey-progress" aria-hidden="true"><span data-journey-progress style="width:33%"></span></div><div class="journey-panel-footer"><span>ONE IDEA CAN GO A LONG WAY</span><span data-journey-count>01 — 03</span></div></article></div></section>';
 }
 
 function laptopArt() {
@@ -145,7 +165,7 @@ function renderHome(section) {
     '<div class="hero-actions"><a class="btn btn-primary" href="#/home/events">Explore Hackathons ' + icon("arrow") + '</a><a class="btn btn-outline" href="#/register">Join CampusCode</a></div></div>' +
     laptopArt() + '</section><section class="section-block flashcard-section" id="upcoming-hackathons"><div class="flashcard-intro"><span class="flashcard-eyebrow">YOUR NEXT BUILD STARTS HERE</span><h2>Upcoming<br>Hackathons</h2><p>Three student challenges. Pick one, bring your ideas, and build something worth sharing.</p><a class="text-link" href="#/home/events">View all events ' + icon("arrow") + '</a></div>' +
     '<div class="flashcard-stage" data-flashcard-stage role="region" aria-label="Upcoming hackathons" aria-roledescription="carousel"><div class="flashcard-stack">' + flashcards + '</div>' +
-    '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Click a card or use arrows to flip</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section></main>' +
+    '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Click a card or use arrows to flip</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section>' + communitySection() + aboutSection() + '</main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP · CHENNAI, INDIA</span></footer></div>';
 }
 
@@ -299,8 +319,13 @@ function render() {
   else if (route === "dashboard") app.innerHTML = renderDashboard(section);
   else app.innerHTML = renderHome(section);
   bindInteractions();
-  if (route === "home" && section === "events") {
-    window.setTimeout(() => document.querySelector("#upcoming-hackathons")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  if (route === "home") {
+    const sectionTargets = { events: "#upcoming-hackathons", community: "#community", about: "#about" };
+    if (section === "dashboard") {
+      window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+    } else if (sectionTargets[section]) {
+      window.setTimeout(() => document.querySelector(sectionTargets[section])?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    }
   }
 }
 
@@ -396,6 +421,63 @@ function bindInteractions() {
       menu.setAttribute("aria-expanded", String(open));
     });
   }
+
+  const communityContent = {
+    collaborate: {
+      kicker: "WORK BETTER, TOGETHER",
+      title: "Meet the people behind your next good idea.",
+      copy: "Find collaborators, share what you are learning, and build with students who are ready to make something real."
+    },
+    share: {
+      kicker: "MAKE THE PROCESS VISIBLE",
+      title: "Let the small wins move the work forward.",
+      copy: "Share progress, exchange feedback, and keep your team connected from the first sketch to the final demo."
+    },
+    ship: {
+      kicker: "CELEBRATE WHAT YOU SHIP",
+      title: "Give your finished work a place to land.",
+      copy: "Bring your project together, submit it to a challenge, and make the result part of your builder story."
+    }
+  };
+  document.querySelectorAll("[data-community-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = communityContent[button.dataset.communityMode];
+      if (!mode) return;
+      document.querySelectorAll("[data-community-mode]").forEach((choice) => {
+        const active = choice === button;
+        choice.classList.toggle("active", active);
+        choice.setAttribute("aria-pressed", String(active));
+      });
+      document.querySelector("[data-community-kicker]").textContent = mode.kicker;
+      document.querySelector("[data-community-title]").textContent = mode.title;
+      document.querySelector("[data-community-copy]").textContent = mode.copy;
+      document.querySelectorAll(".orbit-node").forEach((node, index) => {
+        node.classList.toggle("is-active", index === ["collaborate", "share", "ship"].indexOf(button.dataset.communityMode));
+      });
+    });
+  });
+
+  const journeyContent = {
+    discover: { label: "STEP 01 / DISCOVER", title: "Pick a problem you care about.", copy: "Browse student challenges, explore the brief, and choose a problem worth your team’s time.", progress: "33%", count: "01 — 03" },
+    build: { label: "STEP 02 / BUILD", title: "Make the idea real with a team.", copy: "Bring different strengths together, test your thinking, and turn the first sketch into a working project.", progress: "66%", count: "02 — 03" },
+    ship: { label: "STEP 03 / SHIP", title: "Put your work out in the world.", copy: "Submit what you built, share the outcome, and keep a clear record of the work behind it.", progress: "100%", count: "03 — 03" }
+  };
+  document.querySelectorAll("[data-journey-step]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const step = journeyContent[button.dataset.journeyStep];
+      if (!step) return;
+      document.querySelectorAll("[data-journey-step]").forEach((choice) => {
+        const active = choice === button;
+        choice.classList.toggle("active", active);
+        choice.setAttribute("aria-pressed", String(active));
+      });
+      document.querySelector("[data-journey-label]").textContent = step.label;
+      document.querySelector("[data-journey-title]").textContent = step.title;
+      document.querySelector("[data-journey-copy]").textContent = step.copy;
+      document.querySelector("[data-journey-progress]").style.width = step.progress;
+      document.querySelector("[data-journey-count]").textContent = step.count;
+    });
+  });
 
   document.querySelectorAll("[data-password]").forEach((button) => {
     button.addEventListener("click", () => {
