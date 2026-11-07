@@ -901,14 +901,13 @@ body::after {
   isolation: isolate;
   background-color: #fbfbf8;
   background-image:
-    url("./assets/ambient-paths.svg"),
     linear-gradient(35deg, rgba(234,255,198,.62), rgba(255,255,255,.82) 45%, rgba(232,226,255,.7)),
     linear-gradient(rgba(102,105,123,.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(102,105,123,.05) 1px, transparent 1px),
     linear-gradient(rgba(102,105,123,.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(102,105,123,.025) 1px, transparent 1px);
-  background-size: cover, auto, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
-  background-position: center, center, 0 0, 0 0, 0 0, 0 0;
+  background-size: auto, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  background-position: center, 0 0, 0 0, 0 0, 0 0;
 }
 .hero-wrap::before, .auth-shell::before, .dashboard-main::before {
   position: absolute;
@@ -917,23 +916,74 @@ body::after {
   content: "";
   pointer-events: none;
   background:
-    radial-gradient(circle at 17% 29%, rgba(155,132,255,.48) 0 2px, transparent 3px),
-    radial-gradient(circle at 78% 24%, rgba(155,132,255,.37) 0 2px, transparent 3px),
-    radial-gradient(circle at 71% 78%, rgba(155,132,255,.42) 0 2.5px, transparent 3.5px),
-    radial-gradient(circle at 37% 75%, rgba(168,230,46,.32) 0 2px, transparent 3px);
-  animation: section-particles 15s ease-in-out infinite alternate;
+    radial-gradient(circle at 17% 29%, rgba(155,132,255,.43) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 24%, rgba(155,132,255,.34) 0 2px, transparent 3px),
+    radial-gradient(circle at 71% 78%, rgba(155,132,255,.38) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 37% 75%, rgba(168,230,46,.29) 0 2px, transparent 3px);
+  animation: section-particles 11s ease-in-out infinite alternate;
 }
 @keyframes section-particles {
-  to { background-position: 0 -10px, 0 7px, 0 -6px, 0 9px; opacity: .52; }
+  to { background-position: 0 -42px, 0 36px, 0 -31px, 0 27px; opacity: .51; }
+}
+.hero-wrap::after, .auth-shell::after, .dashboard-main::after {
+  position: absolute;
+  z-index: 0;
+  inset: -1%;
+  content: "";
+  pointer-events: none;
+  background: url("./assets/ambient-paths.svg") 12% 34% / 112% 112% no-repeat;
+  opacity: .22;
+  transform: translate3d(var(--ambient-path-x, 0px), var(--ambient-path-y, 0px), 0);
+  transition: transform 700ms cubic-bezier(.2,.7,.2,1);
+  animation: surface-path-drift 12s ease-in-out infinite alternate;
+  will-change: background-position, transform;
+}
+@keyframes surface-path-drift {
+  from { background-position: 12% 34%; opacity: .17; }
+  to { background-position: 88% 66%; opacity: .31; }
 }
 .hero-wrap > *, .auth-shell > *, .dashboard-main > * { position: relative; z-index: 1; }
 .hero-copy, .hero-art { z-index: 1; }
+.ambient-particles {
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translate3d(var(--ambient-particle-x, 0px), var(--ambient-particle-y, 0px), 0);
+  transition: transform 850ms cubic-bezier(.2,.7,.2,1);
+  will-change: transform;
+}
+.ambient-particles .particle {
+  position: absolute;
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: #927cff;
+  border: 1px solid rgba(255,255,255,.82);
+  border-radius: 50%;
+  box-shadow: 0 0 14px 4px rgba(146,124,255,.26);
+  opacity: .38;
+  animation: ambient-dot-float var(--float-duration, 9s) ease-in-out var(--float-delay, 0s) infinite alternate;
+  will-change: transform, opacity;
+}
+.particle-one { top: 16%; left: 7%; --float-duration: 8.5s; --float-delay: -2s; }
+.particle-two { top: 26%; right: 6%; width: 6px; height: 6px; --float-duration: 10s; --float-delay: -6s; }
+.particle-three { right: 8%; bottom: 18%; --float-duration: 9.2s; --float-delay: -4s; }
+.particle-four { bottom: 13%; left: 9%; width: 5px; height: 5px; --float-duration: 11s; --float-delay: -8s; }
+@keyframes ambient-dot-float {
+  0% { transform: translate3d(0, 0, 0) scale(.72); opacity: .22; }
+  55% { opacity: .57; }
+  100% { transform: translate3d(11px, -24px, 0) scale(1.12); opacity: .43; }
+}
 @media (max-width: 760px) {
   body::before { background-size: 1600px auto; background-position: 54% center; }
-  .hero-wrap, .auth-shell, .dashboard-main { background-size: auto, auto, 20px 20px, 20px 20px, 100px 100px, 100px 100px; }
+  .hero-wrap, .auth-shell, .dashboard-main { background-size: auto, 20px 20px, 20px 20px, 100px 100px, 100px 100px; }
+  .hero-wrap::after, .auth-shell::after, .dashboard-main::after { background-size: 145% 112%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  body::before, body::after, .hero-wrap::before, .auth-shell::before, .dashboard-main::before { animation: none !important; transition: none !important; }
+  body::before, body::after, .hero-wrap::before, .auth-shell::before, .dashboard-main::before, .hero-wrap::after, .auth-shell::after, .dashboard-main::after, .ambient-particles, .ambient-particles .particle { animation: none !important; transition: none !important; }
   body::before, body::after { transform: none !important; }
+  .hero-wrap::after, .auth-shell::after, .dashboard-main::after, .ambient-particles { transform: none !important; }
 }
 
