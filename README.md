@@ -11,11 +11,14 @@ Open index.html in a browser, or serve this folder with any static file server. 
 ## Demo interactions
 
 - Home links move between the landing page, sign-in, registration, and hackathon list.
-- Login and registration validate the form fields and open the dashboard with demo profile data.
+- Hover or focus the landing page code badge to see why students use CampusCode; click the Upcoming Hackathons heading to preview the next events.
+- The laptop play control starts a short animated CampusCode preview.
+- Hover, focus, or click the campus illustration on the login page to reveal the three student benefits.
+- Login and registration open the dashboard with demo profile data, even when their fields are left blank. Registration uses one email field.
 - Dashboard navigation switches between Dashboard, My Events, Events, Submissions, Certificates, and Settings.
 - Event registration, password visibility, notification feedback, and profile updates are local demo interactions.
 
-The project uses mock data only. It does not connect to a backend, create real accounts, authenticate with Google or GitHub, or upload submissions. Demo profile and event state are stored in the current browser tab's session storage.
+The project uses mock data only. The laptop preview is an in-page animation, not a hosted video file. The site does not connect to a backend, create real accounts, authenticate with Google or GitHub, or upload submissions. Demo profile and event state are stored in the current browser tab's session storage.
 
 ## Brand asset
 
@@ -24,3 +27,4 @@ The header wordmark and decorative slash marks use a pixel crop from the supplie
 ## Design direction
 
 The layout follows the Round 2 reference: warm off-white canvas, white cards, thin neutral borders, bold Inter headings, small DM Mono labels, purple primary actions, lime accents, and a compact student dashboard with both My Events and Events.
+
