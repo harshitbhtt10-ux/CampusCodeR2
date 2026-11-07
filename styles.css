@@ -324,7 +324,10 @@ svg { display: block; }
   box-shadow: var(--shadow);
   transform-origin: 50% 90%;
   transition: transform .38s cubic-bezier(.2,.8,.2,1), opacity .3s ease, border-color .3s ease, background .3s ease;
+  cursor: pointer;
 }
+.hackathon-flashcard.deck-front:hover { box-shadow: 0 22px 48px rgba(30,26,57,.16); }
+.hackathon-flashcard:focus-visible { outline: 3px solid var(--purple); outline-offset: 4px; }
 .hackathon-flashcard::before { position: absolute; inset: 0 0 auto; height: 3px; content: ""; background: linear-gradient(90deg, var(--purple), var(--lime)); opacity: .95; }
 .hackathon-flashcard.deck-front { z-index: 3; opacity: 1; transform: translateY(0) rotate(-.4deg) scale(1); }
 .hackathon-flashcard.deck-back-one { z-index: 2; opacity: .9; transform: translate(8px,-12px) rotate(2.4deg) scale(.975); }
@@ -336,7 +339,7 @@ svg { display: block; }
 .flashcard-dots i:nth-child(3) { background: var(--lime); }
 .flashcard-chrome-line { height: 6px; flex: 1; background: linear-gradient(90deg, var(--lime), var(--purple)); border-radius: 999px; }
 .flashcard-chrome-label { color: var(--muted); font-family: "DM Mono", monospace; font-size: 8px; letter-spacing: .08em; white-space: nowrap; }
-.flashcard-content { display: flex; height: calc(100% - 47px); flex-direction: column; padding-top: 18px; }
+.flashcard-content { display: flex; height: calc(100% - 47px); flex-direction: column; padding-top: 18px; transition: opacity .28s ease; }
 .hackathon-flashcard:not(.deck-front) .flashcard-content { opacity: 0; }
 .flashcard-meta { display: flex; align-items: center; gap: 10px; }
 .flashcard-number { color: var(--purple-dark); font-family: "DM Mono", monospace; font-size: 12px; font-weight: 700; }
