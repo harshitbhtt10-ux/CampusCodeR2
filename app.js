@@ -119,9 +119,9 @@ function laptopArt() {
     '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Why CampusCode? Build with peers.</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
     '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Why CampusCode? Find a challenge.</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
     '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Why CampusCode? Show what you built.</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
-    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag left or right or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight Home"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
+    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag in any direction or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
     '<div class="preview-player" data-preview-player><div class="preview-scene"><span class="scene-slash"></span><span class="scene-window"></span><span class="scene-caption">IDEAS → PROJECTS → IMPACT</span></div><div class="preview-overlay"><span class="preview-brand">CAMPUSCODE ORIGINAL</span><button class="preview-play" type="button" data-preview-toggle aria-label="Play CampusCode preview" aria-pressed="false">' + icon("play") + '</button><strong>Build. Compete. Ship.</strong><small>A campus builder story</small></div><div class="preview-controls"><span data-preview-time>00:00 / 00:12</span><span class="preview-track"><i data-preview-progress></i></span></div></div></div></div><div class="laptop-base"></div></div>' +
-    '<div class="laptop-controls" role="group" aria-label="Laptop rotation controls"><button type="button" data-laptop-turn="-6" aria-label="Rotate laptop left">↶</button><span>ADJUST VIEW</span><button type="button" data-laptop-turn="6" aria-label="Rotate laptop right">↷</button><button type="button" class="reset-view" data-laptop-reset>Reset</button></div>' +
+    '<div class="laptop-controls" role="group" aria-label="Laptop 3D rotation controls"><button type="button" data-laptop-axis="y" data-laptop-turn="-8" aria-label="Rotate laptop left">←</button><button type="button" data-laptop-axis="x" data-laptop-turn="-8" aria-label="Tilt laptop up">↑</button><button type="button" data-laptop-axis="z" data-laptop-turn="-8" aria-label="Roll laptop left">↺</button><span>DRAG</span><button type="button" data-laptop-axis="x" data-laptop-turn="8" aria-label="Tilt laptop down">↓</button><button type="button" data-laptop-axis="y" data-laptop-turn="8" aria-label="Rotate laptop right">→</button><button type="button" data-laptop-axis="z" data-laptop-turn="8" aria-label="Roll laptop right">↻</button><button type="button" class="reset-view" data-laptop-reset>Reset</button></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
 }
 
@@ -383,43 +383,55 @@ function bindInteractions() {
   if (laptop) {
     let rotateY = -1;
     let rotateX = 0;
+    let rotateZ = -6;
     let dragStart;
     const setLaptopAngle = () => {
       laptop.style.setProperty("--laptop-rotate-x", rotateX + "deg");
       laptop.style.setProperty("--laptop-rotate-y", rotateY + "deg");
+      laptop.style.setProperty("--laptop-rotate-z", rotateZ + "deg");
     };
-    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const wrapAngle = (value) => ((value + 180) % 360 + 360) % 360 - 180;
     document.querySelectorAll("[data-laptop-turn]").forEach((button) => {
       button.addEventListener("click", () => {
-        rotateY = clamp(rotateY + Number(button.dataset.laptopTurn), -18, 18);
+        const axis = button.dataset.laptopAxis;
+        const amount = Number(button.dataset.laptopTurn);
+        if (axis === "x") rotateX = wrapAngle(rotateX + amount);
+        if (axis === "y") rotateY = wrapAngle(rotateY + amount);
+        if (axis === "z") rotateZ = wrapAngle(rotateZ + amount);
         setLaptopAngle();
       });
     });
     document.querySelector("[data-laptop-reset]")?.addEventListener("click", () => {
       rotateX = 0;
       rotateY = -1;
+      rotateZ = -6;
       setLaptopAngle();
     });
     laptop.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
         event.preventDefault();
-        rotateY = clamp(rotateY + (event.key === "ArrowLeft" ? -4 : 4), -18, 18);
+        if (event.key === "ArrowLeft") rotateY = wrapAngle(rotateY - 4);
+        if (event.key === "ArrowRight") rotateY = wrapAngle(rotateY + 4);
+        if (event.key === "ArrowUp") rotateX = wrapAngle(rotateX - 4);
+        if (event.key === "ArrowDown") rotateX = wrapAngle(rotateX + 4);
         setLaptopAngle();
       } else if (event.key === "Home") {
         rotateX = 0;
         rotateY = -1;
+        rotateZ = -6;
         setLaptopAngle();
       }
     });
     laptop.addEventListener("pointerdown", (event) => {
       if (event.button !== 0 || event.target.closest("button")) return;
-      dragStart = { x: event.clientX, angle: rotateY, pointerId: event.pointerId };
+      dragStart = { x: event.clientX, y: event.clientY, rotateX, rotateY, pointerId: event.pointerId };
       laptop.classList.add("dragging");
       laptop.setPointerCapture(event.pointerId);
     });
     laptop.addEventListener("pointermove", (event) => {
       if (!dragStart || event.pointerId !== dragStart.pointerId) return;
-      rotateY = clamp(dragStart.angle + (event.clientX - dragStart.x) * .28, -18, 18);
+      rotateY = wrapAngle(dragStart.rotateY + (event.clientX - dragStart.x) * .35);
+      rotateX = wrapAngle(dragStart.rotateX - (event.clientY - dragStart.y) * .35);
       setLaptopAngle();
     });
     const finishLaptopDrag = (event) => {
