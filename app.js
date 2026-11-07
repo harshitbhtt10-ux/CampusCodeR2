@@ -116,11 +116,12 @@ function feature(iconName, title, copy) {
 function laptopArt() {
   return '<div class="hero-art" aria-label="CampusCode project workspace illustration">' +
     '<div class="hero-glow"></div><span class="hero-slash one"></span><span class="hero-slash two"></span>' +
-    '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Build with student teams</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
-    '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Find your next hackathon</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
-    '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Compete and get recognized</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
-    '<div class="laptop"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
+    '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Why CampusCode? Build with peers.</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
+    '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Why CampusCode? Find a challenge.</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
+    '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Why CampusCode? Show what you built.</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
+    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag left or right or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight Home"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
     '<div class="preview-player" data-preview-player><div class="preview-scene"><span class="scene-slash"></span><span class="scene-window"></span><span class="scene-caption">IDEAS → PROJECTS → IMPACT</span></div><div class="preview-overlay"><span class="preview-brand">CAMPUSCODE ORIGINAL</span><button class="preview-play" type="button" data-preview-toggle aria-label="Play CampusCode preview" aria-pressed="false">' + icon("play") + '</button><strong>Build. Compete. Ship.</strong><small>A campus builder story</small></div><div class="preview-controls"><span data-preview-time>00:00 / 00:12</span><span class="preview-track"><i data-preview-progress></i></span></div></div></div></div><div class="laptop-base"></div></div>' +
+    '<div class="laptop-controls" role="group" aria-label="Laptop rotation controls"><button type="button" data-laptop-turn="-6" aria-label="Rotate laptop left">↶</button><span>ADJUST VIEW</span><button type="button" data-laptop-turn="6" aria-label="Rotate laptop right">↷</button><button type="button" class="reset-view" data-laptop-reset>Reset</button></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
 }
 
@@ -377,6 +378,59 @@ function bindInteractions() {
       button.setAttribute("aria-expanded", String(open));
     });
   });
+
+  const laptop = document.querySelector("[data-laptop-rotator]");
+  if (laptop) {
+    let rotateY = -1;
+    let rotateX = 0;
+    let dragStart;
+    const setLaptopAngle = () => {
+      laptop.style.setProperty("--laptop-rotate-x", rotateX + "deg");
+      laptop.style.setProperty("--laptop-rotate-y", rotateY + "deg");
+    };
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    document.querySelectorAll("[data-laptop-turn]").forEach((button) => {
+      button.addEventListener("click", () => {
+        rotateY = clamp(rotateY + Number(button.dataset.laptopTurn), -18, 18);
+        setLaptopAngle();
+      });
+    });
+    document.querySelector("[data-laptop-reset]")?.addEventListener("click", () => {
+      rotateX = 0;
+      rotateY = -1;
+      setLaptopAngle();
+    });
+    laptop.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        rotateY = clamp(rotateY + (event.key === "ArrowLeft" ? -4 : 4), -18, 18);
+        setLaptopAngle();
+      } else if (event.key === "Home") {
+        rotateX = 0;
+        rotateY = -1;
+        setLaptopAngle();
+      }
+    });
+    laptop.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 || event.target.closest("button")) return;
+      dragStart = { x: event.clientX, angle: rotateY, pointerId: event.pointerId };
+      laptop.classList.add("dragging");
+      laptop.setPointerCapture(event.pointerId);
+    });
+    laptop.addEventListener("pointermove", (event) => {
+      if (!dragStart || event.pointerId !== dragStart.pointerId) return;
+      rotateY = clamp(dragStart.angle + (event.clientX - dragStart.x) * .28, -18, 18);
+      setLaptopAngle();
+    });
+    const finishLaptopDrag = (event) => {
+      if (!dragStart || event.pointerId !== dragStart.pointerId) return;
+      dragStart = undefined;
+      laptop.classList.remove("dragging");
+      if (laptop.hasPointerCapture(event.pointerId)) laptop.releasePointerCapture(event.pointerId);
+    };
+    laptop.addEventListener("pointerup", finishLaptopDrag);
+    laptop.addEventListener("pointercancel", finishLaptopDrag);
+  }
 
   const upcomingButton = document.querySelector("[data-upcoming-toggle]");
   if (upcomingButton) upcomingButton.addEventListener("click", () => {
