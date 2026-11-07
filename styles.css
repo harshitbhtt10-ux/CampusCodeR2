@@ -176,6 +176,8 @@ svg { display: block; }
   background: linear-gradient(145deg, #fbfaff, #f2efff);
   border-radius: 5px;
 }
+.screen-content.laptop-gif-frame { display: block; overflow: hidden; padding: 0; background: #f4f0ff; }
+.laptop-screen-gif { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .screen-top { display: flex; align-items: center; justify-content: space-between; }
 .screen-dots { display: flex; gap: 4px; }
 .screen-dots i { width: 6px; height: 6px; background: #c8c2e3; border-radius: 50%; }
