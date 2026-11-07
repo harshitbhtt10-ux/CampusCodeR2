@@ -57,6 +57,7 @@ function escapeHTML(value) {
 
 let events = readEvents();
 let toastTimer;
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
 function showToast(message) {
   toastNode.textContent = message;
@@ -329,7 +330,10 @@ function render() {
   else if (route === "register") app.innerHTML = renderRegister();
   else if (route === "dashboard") app.innerHTML = renderDashboard(section);
   else app.innerHTML = renderHome(section);
-  if (route === "login" || route === "register") window.scrollTo(0, 0);
+  if (route === "login" || route === "register") {
+    window.scrollTo(0, 0);
+    window.requestAnimationFrame(() => window.scrollTo(0, 0));
+  }
   bindInteractions();
   if (route === "home") {
     const sectionTargets = { events: "#upcoming-hackathons", community: "#community", about: "#about" };
