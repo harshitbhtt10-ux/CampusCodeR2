@@ -209,7 +209,7 @@ function field(name, label, placeholder, type, iconName, extra) {
 
 function renderLogin() {
   return '<div class="site-shell">' + header("login") + '<main class="auth-shell">' + authStory("login") +
-    '<div class="auth-card-frame auth-card-frame-login"><span class="auth-card-frame-backdrop" aria-hidden="true"></span><section class="auth-card auth-card-login"><div class="auth-card-brandmark" aria-hidden="true">///</div><h2>Login to your account</h2><p class="card-subtitle">Access your CampusCode dashboard</p><span class="auth-card-underline"></span>' +
+    '<div class="auth-card-frame auth-card-frame-login"><span class="auth-card-frame-backdrop" aria-hidden="true"></span><section class="auth-card auth-card-login"><div class="auth-card-brandmark" aria-hidden="true"><i></i><i></i><i></i></div><h2>Login to your account</h2><p class="card-subtitle">Access your CampusCode dashboard</p><span class="auth-card-underline"></span>' +
     '<form id="login-form" novalidate>' + field("login-id", "CampusCode ID / Email", "Enter your CampusCode ID or email", "text", "mail", ' autocomplete="username"') +
     field("login-password", "Password", "Enter your password", "password", "lock", ' autocomplete="current-password"') +
     '<div class="forgot-row"><button type="button" data-forgot>Forgot password?</button></div>' +
@@ -221,7 +221,7 @@ function renderLogin() {
 
 function renderRegister() {
   return '<div class="site-shell">' + header("register") + '<main class="auth-shell register">' + authStory("register") +
-    '<section class="auth-card auth-card-register"><div class="auth-card-brandmark" aria-hidden="true">///</div><h2>Create your account</h2><p class="card-subtitle">Register and start building today.</p>' +
+    '<section class="auth-card auth-card-register"><div class="auth-card-brandmark" aria-hidden="true"><i></i><i></i><i></i></div><h2>Create your account</h2><p class="card-subtitle">Register and start building today.</p>' +
     '<ol class="auth-stepper" aria-label="Registration steps"><li class="active" aria-current="step"><i>' + icon("users") + '</i><span>Account Details</span></li><li><i>' + icon("mail") + '</i><span>Verify Email</span></li><li><i>' + icon("trophy") + '</i><span>Start Building</span></li></ol>' +
     '<form id="register-form" novalidate>' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"').replace('<div class="form-field">','<div class="form-field wide">') +
     field("register-email", "Email", "Enter your college email", "email", "mail", ' autocomplete="email"') +
@@ -329,6 +329,7 @@ function render() {
   else if (route === "register") app.innerHTML = renderRegister();
   else if (route === "dashboard") app.innerHTML = renderDashboard(section);
   else app.innerHTML = renderHome(section);
+  if (route === "login" || route === "register") window.scrollTo(0, 0);
   bindInteractions();
   if (route === "home") {
     const sectionTargets = { events: "#upcoming-hackathons", community: "#community", about: "#about" };
