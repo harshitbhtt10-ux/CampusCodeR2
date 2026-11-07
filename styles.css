@@ -177,16 +177,26 @@ svg { display: block; }
   border-radius: 5px;
 }
 .screen-content.laptop-gif-frame { display: block; overflow: hidden; padding: 0; background: #f4f0ff; }
-.laptop-animation-player { position: relative; width: 100%; height: 100%; overflow: hidden; background: #f4f0ff; border-radius: 5px; }
+.laptop-animation-player { position: relative; width: 100%; height: 100%; overflow: hidden; background: #f4f0ff; border-radius: 5px; container-type: size; }
 .laptop-gif-sprite {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
   background-image: url("./assets/campuscode-screen-frames.jpg");
   background-repeat: no-repeat;
   background-position: 0 0;
   background-size: 900% 100%;
   animation: laptop-gif-play var(--laptop-gif-duration, 11.7s) steps(9, end) infinite;
   will-change: background-position;
+}
+@container (min-aspect-ratio: 553 / 308) {
+  .laptop-gif-sprite { width: auto; height: 100%; aspect-ratio: 553 / 308; }
+}
+@container (max-aspect-ratio: 553 / 308) {
+  .laptop-gif-sprite { width: 100%; height: auto; aspect-ratio: 553 / 308; }
 }
 .screen-top { display: flex; align-items: center; justify-content: space-between; }
 .screen-dots { display: flex; gap: 4px; }
