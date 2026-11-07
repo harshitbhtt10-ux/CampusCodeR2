@@ -6,6 +6,14 @@
     <meta name="theme-color" content="#f7f7f4" />
     <meta name="description" content="Discover hackathons, build projects, and ship with CampusCode." />
     <title>CampusCode — Build. Compete. Ship.</title>
+    <script>
+      try {
+        if (localStorage.getItem("campuscode-theme") === "dark") {
+          document.documentElement.dataset.theme = "dark";
+          document.querySelector('meta[name="theme-color"]').content = "#070d09";
+        }
+      } catch { }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
