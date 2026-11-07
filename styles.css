@@ -309,6 +309,8 @@ svg { display: block; }
 .flashcard-eyebrow { color: var(--purple-dark); font-family: "DM Mono", monospace; font-size: 10px; font-weight: 700; letter-spacing: .11em; }
 .flashcard-intro h2 { margin: 13px 0 12px; font-size: clamp(30px, 3.3vw, 45px); line-height: .99; letter-spacing: -2px; }
 .flashcard-intro p { max-width: 310px; margin: 0 0 18px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.flashcard-intro .text-link { white-space: nowrap; }
+.flashcard-intro .text-link svg { width: 16px; height: 16px; flex: 0 0 16px; }
 .flashcard-stage { min-width: 0; }
 .flashcard-stack { position: relative; width: min(100%, 620px); min-height: 310px; margin: 0 auto 22px; perspective: 1100px; }
 .hackathon-flashcard {
