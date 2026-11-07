@@ -873,6 +873,8 @@ body::before {
   z-index: 0;
   background: url("./assets/ambient-paths.svg") center / min(1600px, 140vw) auto no-repeat;
   opacity: .34;
+  transform: translate3d(var(--ambient-path-x, 0px), var(--ambient-path-y, 0px), 0);
+  transition: transform 900ms cubic-bezier(.2,.7,.2,1);
   animation: path-drift 38s ease-in-out infinite alternate;
 }
 body::after {
@@ -883,13 +885,15 @@ body::after {
     radial-gradient(circle at 68% 79%, rgba(152,128,255,.48) 0 2.5px, transparent 3.5px),
     radial-gradient(circle at 35% 72%, rgba(168,230,46,.32) 0 2px, transparent 3px);
   opacity: .62;
+  transform: translate3d(var(--ambient-particle-x, 0px), var(--ambient-particle-y, 0px), 0);
+  transition: transform 900ms cubic-bezier(.2,.7,.2,1);
   animation: particle-drift 17s ease-in-out infinite alternate;
 }
 @keyframes path-drift {
   to { background-position: calc(50% + 12px) calc(50% - 10px); opacity: .42; }
 }
 @keyframes particle-drift {
-  to { transform: translate3d(0,-9px,0); opacity: .4; }
+  to { background-position: 0 -8px, 0 7px, 0 -6px, 0 9px; opacity: .4; }
 }
 .site-shell, .dashboard-shell { z-index: 1; }
 .hero-wrap, .auth-shell, .dashboard-main {
@@ -929,6 +933,7 @@ body::after {
   .hero-wrap, .auth-shell, .dashboard-main { background-size: auto, auto, 20px 20px, 20px 20px, 100px 100px, 100px 100px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  body::before, body::after, .hero-wrap::before, .auth-shell::before, .dashboard-main::before { animation: none !important; }
+  body::before, body::after, .hero-wrap::before, .auth-shell::before, .dashboard-main::before { animation: none !important; transition: none !important; }
+  body::before, body::after { transform: none !important; }
 }
 
