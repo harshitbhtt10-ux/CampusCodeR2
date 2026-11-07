@@ -551,10 +551,10 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     if (event.pointerType === "touch") return;
     const horizontal = event.clientX / Math.max(window.innerWidth, 1) - .5;
     const vertical = event.clientY / Math.max(window.innerHeight, 1) - .5;
-    document.body.style.setProperty("--ambient-path-x", (-horizontal * 10).toFixed(1) + "px");
-    document.body.style.setProperty("--ambient-path-y", (-vertical * 8).toFixed(1) + "px");
-    document.body.style.setProperty("--ambient-particle-x", (horizontal * 5).toFixed(1) + "px");
-    document.body.style.setProperty("--ambient-particle-y", (vertical * 4).toFixed(1) + "px");
+    document.body.style.setProperty("--ambient-path-x", (-horizontal * 30).toFixed(1) + "px");
+    document.body.style.setProperty("--ambient-path-y", (-vertical * 22).toFixed(1) + "px");
+    document.body.style.setProperty("--ambient-particle-x", (horizontal * 18).toFixed(1) + "px");
+    document.body.style.setProperty("--ambient-particle-y", (vertical * 14).toFixed(1) + "px");
   };
   const resetAmbientParallax = () => {
     document.body.style.setProperty("--ambient-path-x", "0px");
