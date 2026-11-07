@@ -990,3 +990,25 @@ body::after { display: none !important; }
   .flashcard-footer > span { display: none; }
   .flashcard-link { margin-left: auto; }
 }
+
+/* Let the animated site background continue behind the hackathon deck. */
+.flashcard-section {
+  background: transparent;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.hackathon-flashcard {
+  background: rgba(255, 255, 255, .58);
+  border-color: rgba(118, 101, 255, .22);
+  box-shadow: 0 18px 42px rgba(42, 33, 100, .13);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.hackathon-flashcard.deck-back-one { background: rgba(255, 255, 255, .48); }
+.hackathon-flashcard.deck-back-two { background: rgba(255, 255, 255, .38); }
+.flashcard-chrome { border-bottom-color: rgba(118, 101, 255, .16); }
+.flashcard-details div {
+  background: rgba(255, 255, 255, .34);
+  border-color: rgba(118, 101, 255, .16);
+}
