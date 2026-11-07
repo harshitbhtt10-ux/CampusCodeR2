@@ -441,6 +441,8 @@ function bindInteractions() {
       copy: "Campuses give ideas a place to begin: student challenges, nearby collaborators, and a community ready to see what you make. Share your project beyond your own team."
     }
   };
+  let communitySwitchTimer;
+  let communitySwitchToken = 0;
   document.querySelectorAll("[data-community-mode]").forEach((button) => {
     button.addEventListener("click", () => {
       const mode = communityContent[button.dataset.communityMode];
@@ -448,6 +450,8 @@ function bindInteractions() {
       const answer = document.querySelector("[data-community-answer]");
       const prompt = document.querySelector("[data-community-prompt]");
       if (!answer || !prompt) return;
+      const switchToken = ++communitySwitchToken;
+      window.clearTimeout(communitySwitchTimer);
       document.querySelectorAll("[data-community-mode]").forEach((choice) => {
         const active = choice === button;
         choice.classList.toggle("active", active);
@@ -455,14 +459,24 @@ function bindInteractions() {
       });
       document.querySelector("[data-community-core-label]").textContent = "EXPLORE";
       document.querySelector("[data-community-core]").textContent = mode.core;
-      document.querySelector("[data-community-kicker]").textContent = mode.kicker;
-      document.querySelector("[data-community-title]").textContent = mode.title;
-      document.querySelector("[data-community-copy]").textContent = mode.copy;
-      prompt.hidden = true;
-      answer.hidden = false;
-      answer.classList.remove("answer-enter");
-      void answer.offsetWidth;
-      answer.classList.add("answer-enter");
+      const revealAnswer = () => {
+        if (switchToken !== communitySwitchToken) return;
+        document.querySelector("[data-community-kicker]").textContent = mode.kicker;
+        document.querySelector("[data-community-title]").textContent = mode.title;
+        document.querySelector("[data-community-copy]").textContent = mode.copy;
+        prompt.hidden = true;
+        answer.hidden = false;
+        answer.classList.remove("answer-enter", "answer-exit");
+        void answer.offsetWidth;
+        answer.classList.add("answer-enter");
+      };
+      if (!answer.hidden) {
+        answer.classList.remove("answer-enter", "answer-exit");
+        answer.classList.add("answer-exit");
+        communitySwitchTimer = window.setTimeout(revealAnswer, 180);
+      } else {
+        revealAnswer();
+      }
     });
   });
 
