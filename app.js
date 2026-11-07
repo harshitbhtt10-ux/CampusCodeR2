@@ -86,7 +86,8 @@ function header(route, section) {
     '<a class="' + (section !== "events" ? "active" : "") + '" href="#/home">Home</a>' +
     '<a class="' + (section === "events" ? "active" : "") + '" href="#/home/events">Hackathons</a>' +
     '<a href="#/home/community" data-demo-feature="Community">Community</a>' +
-    '<a href="#/home/about" data-demo-feature="About">About</a></nav>' +
+    '<a href="#/home/about" data-demo-feature="About">About</a>' +
+    '<a class="mobile-only" href="#/login">Login</a><a class="mobile-only" href="#/register">Register</a></nav>' +
     '<div class="header-actions"><a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
     '<button class="mobile-menu" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu>' + icon("grid") + '</button></div></header>';
 }

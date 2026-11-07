@@ -53,6 +53,7 @@ svg { display: block; }
   border-radius: 1px;
 }
 .primary-nav { display: flex; align-items: stretch; gap: 8px; height: 66px; margin: 0 auto; }
+.mobile-only { display: none !important; }
 .primary-nav a, .dash-top-nav a {
   position: relative;
   display: inline-flex;
@@ -434,7 +435,7 @@ svg { display: block; }
   .site-shell, .dashboard-shell { width: min(100% - 22px, 900px); }
   .site-header, .dashboard-header { padding: 0 18px; }
   .brand { width: 170px; }
-  .brand-crop { transform: scale(.9); transform-origin: left center; }
+  .brand-crop { transform: none; }
   .primary-nav { gap: 0; }
   .primary-nav a { padding: 0 9px; }
   .hero-wrap { padding: 30px 28px; }
@@ -448,16 +449,17 @@ svg { display: block; }
 @media (max-width: 760px) {
   .site-shell, .dashboard-shell { width: calc(100% - 16px); margin-top: 8px; }
   .site-header, .dashboard-header { min-height: 60px; padding: 0 13px; border-radius: 16px 16px 0 0; }
-  .brand { width: 150px; }
-  .brand-crop { transform: scale(.82); }
+  .brand { width: 172px; }
+  .brand-crop { transform: none; }
   .primary-nav { position: absolute; top: 58px; right: -1px; left: -1px; display: none; height: auto; flex-direction: column; gap: 0; padding: 8px; background: #fff; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 15px 15px; box-shadow: 0 14px 18px rgba(30,26,57,.09); }
   .primary-nav.open { display: flex; }
   .primary-nav a { min-height: 42px; padding: 0 13px; }
   .primary-nav a.active::after { right: auto; bottom: 8px; left: 2px; width: 3px; height: 24px; border-radius: 3px; }
   .header-actions { gap: 7px; margin-left: auto; }
-  .header-actions .btn { min-height: 36px; padding: 0 12px; font-size: 11px; }
+  .header-actions .btn { display: none; }
   .mobile-menu { display: grid; width: 36px; height: 36px; margin-left: 5px; color: var(--ink); background: #fff; border: 1px solid var(--border); border-radius: 11px; place-items: center; cursor: pointer; }
   .mobile-menu svg { width: 17px; }
+  .primary-nav .mobile-only { display: flex !important; }
   .hero-wrap { grid-template-columns: 1fr; padding: 29px 23px 20px; }
   .hero-copy { padding: 3px 0 0; }
   .hero-copy h1 { max-width: 500px; font-size: clamp(39px, 11vw, 57px); letter-spacing: -2.7px; }
