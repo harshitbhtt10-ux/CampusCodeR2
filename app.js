@@ -56,7 +56,6 @@ function escapeHTML(value) {
 
 let events = readEvents();
 let toastTimer;
-let previewTimer;
 
 function showToast(message) {
   toastNode.textContent = message;
@@ -119,7 +118,7 @@ function laptopArt() {
     '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Why CampusCode? Build with peers.</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
     '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Why CampusCode? Find a challenge.</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
     '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Why CampusCode? Show what you built.</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
-    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag in any direction or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home"><div class="laptop-screen"><div class="screen-content laptop-gif-frame"><img class="laptop-screen-gif" src="./assets/campuscode-screen.gif" alt="CampusCode: Build, Compete, Ship" /></div></div><div class="laptop-base"></div></div>' +
+    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag in any direction or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home"><div class="laptop-screen"><div class="screen-content laptop-gif-frame"><div class="laptop-animation-player" data-gif-player data-duration-ms="11700"><div class="laptop-gif-sprite" role="img" aria-label="CampusCode: Build, Compete, Ship"></div><div class="laptop-video-controls" role="group" aria-label="Animation controls"><button type="button" class="gif-control" data-gif-play aria-label="Pause animation" aria-pressed="true">' + icon("pause") + '</button><button type="button" class="gif-control gif-stop" data-gif-stop aria-label="Stop and return to the beginning">■</button><input type="range" class="gif-seek" data-gif-seek min="0" max="100" step="1" value="0" aria-label="Animation progress" aria-valuetext="0 percent"><span class="gif-time" data-gif-time>0:00 / 0:12</span><button type="button" class="gif-control gif-fullscreen" data-gif-fullscreen aria-label="View animation fullscreen">⛶</button></div></div></div></div><div class="laptop-base"></div></div>' +
     '<div class="laptop-controls" role="group" aria-label="Laptop 3D rotation controls"><button type="button" data-laptop-axis="y" data-laptop-turn="-8" aria-label="Rotate laptop left">←</button><button type="button" data-laptop-axis="x" data-laptop-turn="-8" aria-label="Tilt laptop up">↑</button><button type="button" data-laptop-axis="z" data-laptop-turn="-8" aria-label="Roll laptop left">↺</button><span>DRAG</span><button type="button" data-laptop-axis="x" data-laptop-turn="8" aria-label="Tilt laptop down">↓</button><button type="button" data-laptop-axis="y" data-laptop-turn="8" aria-label="Rotate laptop right">→</button><button type="button" data-laptop-axis="z" data-laptop-turn="8" aria-label="Roll laptop right">↻</button><button type="button" class="reset-view" data-laptop-reset>Reset</button></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
 }
@@ -288,8 +287,6 @@ function routeInfo() {
 }
 
 function render() {
-  window.clearInterval(previewTimer);
-  previewTimer = undefined;
   const { route, section } = routeInfo();
   if (route === "login") app.innerHTML = renderLogin();
   else if (route === "register") app.innerHTML = renderRegister();
@@ -407,6 +404,7 @@ function bindInteractions() {
       setLaptopAngle();
     });
     laptop.addEventListener("keydown", (event) => {
+      if (event.target.closest("button, input, .laptop-video-controls")) return;
       if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
         event.preventDefault();
         if (event.key === "ArrowLeft") rotateY = wrapAngle(rotateY - 4);
@@ -422,7 +420,7 @@ function bindInteractions() {
       }
     });
     laptop.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 || event.target.closest("button")) return;
+      if (event.button !== 0 || event.target.closest("button, input, .laptop-video-controls")) return;
       dragStart = { x: event.clientX, y: event.clientY, rotateX, rotateY, pointerId: event.pointerId };
       laptop.classList.add("dragging");
       laptop.setPointerCapture(event.pointerId);
@@ -464,30 +462,76 @@ function bindInteractions() {
     });
   }
 
-  const previewButton = document.querySelector("[data-preview-toggle]");
-  if (previewButton) previewButton.addEventListener("click", () => {
-    const player = previewButton.closest("[data-preview-player]");
-    const playing = player.classList.toggle("is-playing");
-    previewButton.setAttribute("aria-pressed", String(playing));
-    previewButton.setAttribute("aria-label", playing ? "Pause CampusCode preview" : "Play CampusCode preview");
-    previewButton.innerHTML = icon(playing ? "pause" : "play");
-    if (playing) {
-      let seconds = 0;
-      const timeNode = player.querySelector("[data-preview-time]");
-      const progressNode = player.querySelector("[data-preview-progress]");
-      const updatePreview = () => {
-        seconds = (seconds + 1) % 13;
-        timeNode.textContent = "00:" + String(seconds).padStart(2, "0") + " / 00:12";
-        progressNode.style.width = Math.min(seconds / 12 * 100, 100) + "%";
-      };
-      window.clearInterval(previewTimer);
-      updatePreview();
-      previewTimer = window.setInterval(updatePreview, 1000);
-    } else {
-      window.clearInterval(previewTimer);
-      previewTimer = undefined;
-    }
-  });
+  const gifPlayer = document.querySelector("[data-gif-player]");
+  if (gifPlayer) {
+    const sprite = gifPlayer.querySelector(".laptop-gif-sprite");
+    const playButton = gifPlayer.querySelector("[data-gif-play]");
+    const stopButton = gifPlayer.querySelector("[data-gif-stop]");
+    const seek = gifPlayer.querySelector("[data-gif-seek]");
+    const time = gifPlayer.querySelector("[data-gif-time]");
+    const fullscreenButton = gifPlayer.querySelector("[data-gif-fullscreen]");
+    const duration = Number(gifPlayer.dataset.durationMs) || 11700;
+    let progressFrame = 0;
+    const getAnimation = () => sprite.getAnimations().find((animation) => animation.animationName === "laptop-gif-play") || sprite.getAnimations()[0];
+    const setTime = (milliseconds) => {
+      const cycleTime = Math.max(0, milliseconds) % duration;
+      seek.value = String(Math.round(cycleTime / duration * 100));
+      seek.setAttribute("aria-valuetext", Math.round(cycleTime / duration * 100) + " percent of animation");
+      time.textContent = "0:" + String(Math.floor(cycleTime / 1000)).padStart(2, "0") + " / 0:12";
+    };
+    const updateProgress = () => {
+      const animation = getAnimation();
+      if (!animation) return;
+      setTime(Number(animation.currentTime) || 0);
+      if (animation.playState === "running") progressFrame = requestAnimationFrame(updateProgress);
+      else progressFrame = 0;
+    };
+    const setPlaying = (playing) => {
+      const animation = getAnimation();
+      if (!animation) return;
+      if (playing) {
+        animation.play();
+        playButton.innerHTML = icon("pause");
+        playButton.setAttribute("aria-label", "Pause animation");
+        playButton.setAttribute("aria-pressed", "true");
+        if (!progressFrame) progressFrame = requestAnimationFrame(updateProgress);
+      } else {
+        animation.pause();
+        if (progressFrame) cancelAnimationFrame(progressFrame);
+        progressFrame = 0;
+        playButton.innerHTML = icon("play");
+        playButton.setAttribute("aria-label", "Play animation");
+        playButton.setAttribute("aria-pressed", "false");
+        updateProgress();
+      }
+    };
+    playButton.addEventListener("click", () => setPlaying(getAnimation()?.playState !== "running"));
+    stopButton.addEventListener("click", () => {
+      const animation = getAnimation();
+      if (animation) {
+        animation.pause();
+        animation.currentTime = 0;
+      }
+      setPlaying(false);
+      setTime(0);
+    });
+    seek.addEventListener("input", () => {
+      const animation = getAnimation();
+      if (!animation) return;
+      animation.currentTime = Number(seek.value) / 100 * duration;
+      if (animation.playState !== "running") setTime(Number(animation.currentTime) || 0);
+    });
+    fullscreenButton.addEventListener("click", async () => {
+      try {
+        if (document.fullscreenElement === gifPlayer) await document.exitFullscreen();
+        else await gifPlayer.requestFullscreen();
+      } catch {
+        showToast("Fullscreen is not available in this browser.");
+      }
+    });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
+    else setPlaying(true);
+  }
 
   document.querySelectorAll("[data-toggle-event]").forEach((button) => {
     button.addEventListener("click", () => {
