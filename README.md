@@ -13,7 +13,7 @@ Open index.html in a browser, or serve this folder with any static file server. 
 - Home links move between the landing page, sign-in, registration, and hackathon list.
 - The landing page explains CampusCode as a student hackathon community. Hover or focus each floating laptop badge for a different student benefit, and click the Upcoming Hackathons heading to preview the next events.
 - The laptop play control starts a short animated CampusCode preview.
-- A pale blueprint grid, dotted campus paths, and drifting lavender points match the CampusCode reference background. Drag the laptop in any direction or use the on-screen pitch, yaw, roll, and reset controls. Arrow keys change pitch/yaw, and Home resets the view.
+- A pale blueprint grid, dotted campus paths, drifting lavender points, and pointer-responsive parallax match the CampusCode reference background. Drag the laptop in any direction or use the on-screen pitch, yaw, roll, and reset controls. Arrow keys change pitch/yaw, and Home resets the view.
 - Hover, focus, or click the campus illustration on the login page to reveal the three student benefits.
 - Login and registration open the dashboard with demo profile data, even when their fields are left blank. Registration uses one email field.
 - Dashboard navigation switches between Dashboard, My Events, Events, Submissions, Certificates, and Settings.
