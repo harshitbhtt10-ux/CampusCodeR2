@@ -16,15 +16,17 @@ const iconPaths = {
   certificate: '<circle cx="12" cy="8" r="5"/><path d="m8 12-1 9 5-3 5 3-1-9M10 8l1.3 1.3L14.5 6"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/>',
   logout: '<path d="m10 17 5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>',
+  moon: '<path d="M20.6 14.2A8.5 8.5 0 0 1 9.8 3.4 8.5 8.5 0 1 0 20.6 14.2Z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
   play: '<path d="m8 5 11 7-11 7V5Z"/>',
   pause: '<path d="M8 5v14m8-14v14"/>'
 };
 
 const defaultEvents = [
   { id: "rebuild", name: "ReBuild '26", description: "Recreate & Rebuild Hackathon", date: "Nov 6 – Nov 7, 2026", status: "Ongoing", joined: true, action: "Submit" },
-  { id: "innovate", name: "Campus Innovate", description: "UI/UX Design Challenge", date: "Nov 20, 2026", status: "Upcoming", joined: true, action: "View" },
-  { id: "ai", name: "AI Hackathon", description: "Build AI-powered campus solutions", date: "Nov 15 – Nov 16, 2026", status: "Upcoming", joined: false, action: "Register" },
-  { id: "web", name: "Web Revamp Challenge", description: "Redesign a real product's UI", date: "Nov 22 – Nov 23, 2026", status: "Upcoming", joined: false, action: "Register" }
+  { id: "innovate", name: "Campus Innovate", description: "UI/UX Design Challenge", category: "Product design", date: "Nov 20, 2026", status: "Upcoming", joined: true, action: "View" },
+  { id: "ai", name: "AI Hackathon", description: "Build AI-powered campus solutions", category: "Applied AI", date: "Nov 15 – Nov 16, 2026", status: "Upcoming", joined: false, action: "Register" },
+  { id: "web", name: "Web Revamp Challenge", description: "Redesign a real product's UI", category: "Web experience", date: "Nov 22 – Nov 23, 2026", status: "Upcoming", joined: false, action: "Register" }
 ];
 
 function icon(name, className) {
@@ -68,9 +70,14 @@ function brand() {
   return '<a class="brand" href="#/home" aria-label="CampusCode home"><span class="brand-crop" role="img" aria-label="CampusCode"></span></a>';
 }
 
+function themeToggle() {
+  const dark = document.documentElement.dataset.theme === "dark";
+  return '<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to ' + (dark ? "light" : "dark") + ' theme" title="Switch to ' + (dark ? "light" : "dark") + ' theme">' + icon(dark ? "sun" : "moon") + '</button>';
+}
+
 function header(route, section) {
   if (route === "login" || route === "register") {
-    return '<header class="site-header auth-header">' + brand() + '<a class="back-home" href="#/home">← <span>Back to Home</span></a></header>';
+    return '<header class="site-header auth-header">' + brand() + '<div class="auth-header-actions">' + themeToggle() + '<a class="back-home" href="#/home">← <span>Back to Home</span></a></div></header>';
   }
   if (route === "dashboard") {
     const active = section === "events" ? "hackathons" : "dashboard";
@@ -80,7 +87,7 @@ function header(route, section) {
       '<a class="' + (active === "hackathons" ? "active" : "") + '" href="#/dashboard/events">' + icon("trophy") + 'Hackathons</a>' +
       '<a href="#/dashboard/ai-tools" data-demo-feature="AI Tools">' + icon("grid") + 'AI Tools</a>' +
       '<a href="#/dashboard/community" data-demo-feature="Community">' + icon("users") + 'Community</a></nav>' +
-      '<div class="dash-tools"><button class="nav-icon" type="button" data-notifications aria-label="Notifications">' + icon("bell") + '<span class="notification-dot"></span></button>' +
+      '<div class="dash-tools">' + themeToggle() + '<button class="nav-icon" type="button" data-notifications aria-label="Notifications">' + icon("bell") + '<span class="notification-dot"></span></button>' +
       '<button class="avatar" type="button" data-profile aria-label="Profile menu">' + escapeHTML((readSession().name || "Harshit").slice(0, 1).toUpperCase()) + '</button></div></header>';
   }
   return '<header class="site-header">' + brand() +
@@ -90,7 +97,7 @@ function header(route, section) {
     '<a href="#/home/community" data-demo-feature="Community">Community</a>' +
     '<a href="#/home/about" data-demo-feature="About">About</a>' +
     '<a class="mobile-only" href="#/login">Login</a><a class="mobile-only" href="#/register">Register</a></nav>' +
-    '<div class="header-actions"><a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
+    '<div class="header-actions">' + themeToggle() + '<a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
     '<button class="mobile-menu" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu>' + icon("grid") + '</button></div></header>';
 }
 
@@ -106,6 +113,19 @@ function statusPill(status) {
 function eventCard(event) {
   return '<article class="event-card">' + eventMark() + '<div class="event-main"><div class="event-title-row"><strong>' + escapeHTML(event.name) + '</strong>' + statusPill(event.status) + '</div>' +
     '<div class="event-meta">' + icon("calendar") + escapeHTML(event.date) + '</div></div></article>';
+}
+
+function hackathonFlashcard(event, index, total) {
+  const defaultEvent = defaultEvents.find((item) => item.id === event.id) || {};
+  const savedEvent = events.find((item) => item.id === event.id) || {};
+  const details = { ...defaultEvent, ...event, ...savedEvent };
+  const position = index === 0 ? "front" : index === 1 ? "back-one" : "back-two";
+  return '<article class="hackathon-flashcard deck-' + position + '" data-flashcard-index="' + index + '" role="group" aria-roledescription="slide" aria-label="' + (index + 1) + ' of ' + total + ': ' + escapeHTML(details.name) + '"' + (index ? ' aria-hidden="true" inert' : '') + '>' +
+    '<div class="flashcard-chrome"><span class="flashcard-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="flashcard-chrome-line"></span><span class="flashcard-chrome-label">CAMPUSCODE / HACKATHON</span></div>' +
+    '<div class="flashcard-content"><div class="flashcard-meta"><span class="flashcard-number">' + String(index + 1).padStart(2, "0") + '</span><span class="flashcard-category">' + escapeHTML(details.category || "Student hackathon") + '</span>' + statusPill(details.status) + '</div>' +
+    '<h3>' + escapeHTML(details.name) + '</h3><p>' + escapeHTML(details.description) + '</p>' +
+    '<div class="flashcard-details"><div><span>WHEN</span><strong>' + escapeHTML(details.date) + '</strong></div><div><span>FOCUS</span><strong>' + escapeHTML(details.category || "Student challenge") + '</strong></div></div>' +
+    '<div class="flashcard-footer"><span><small>BUILD · COMPETE · SHIP</small><strong>Make your next idea real.</strong></span><a class="flashcard-link" href="#/home/events">Explore event ' + icon("arrow") + '</a></div></div></article>';
 }
 
 function feature(iconName, title, copy) {
@@ -124,10 +144,8 @@ function laptopArt() {
 }
 
 function renderHome(section) {
-  const eventCards = defaultEvents.slice(0, 3).map(eventCard).join("");
-  const upcomingPreview = defaultEvents.filter((event) => event.status === "Upcoming").map((event) =>
-    '<div class="upcoming-preview-item"><strong>' + escapeHTML(event.name) + '</strong><small>' + escapeHTML(event.date) + '</small></div>'
-  ).join("");
+  const upcomingEvents = events.filter((event) => event.status === "Upcoming");
+  const flashcards = upcomingEvents.map((event, index) => hackathonFlashcard(event, index, upcomingEvents.length)).join("");
   return '<div class="site-shell">' + header("home", section) +
     '<main><section class="hero-wrap"><div class="hero-copy"><span class="eyebrow"><span>ReBuild ’26</span><span class="dot"></span><span>Nov 6 – 7</span></span>' +
     '<h1>Discover Hackathons.<br>Build Projects.<br>Compete. <span class="highlight">Ship.</span></h1>' +
@@ -138,8 +156,9 @@ function renderHome(section) {
     feature("users", "Build & Submit", "Turn your ideas into projects") +
     feature("grid", "Compete", "Track rounds & results") +
     feature("certificate", "Get Certified", "Verifiable certificates & ID") +
-    '</section><section class="section-block" id="upcoming-hackathons"><div class="section-head"><div class="upcoming-title-wrap"><h2 class="section-title"><button type="button" class="upcoming-trigger" data-upcoming-toggle aria-expanded="false" aria-describedby="upcoming-preview">Upcoming Hackathons</button></h2><div class="upcoming-popover" id="upcoming-preview" role="tooltip"><strong>Coming up next</strong>' + upcomingPreview + '</div></div>' +
-    '<a class="text-link" href="#/home/events">View All ' + icon("arrow") + '</a></div><div class="event-grid">' + eventCards + '</div></section></main>' +
+    '</section><section class="section-block flashcard-section" id="upcoming-hackathons"><div class="flashcard-intro"><span class="flashcard-eyebrow">YOUR NEXT BUILD STARTS HERE</span><h2>Upcoming<br>Hackathons</h2><p>Three student challenges. Pick one, bring your ideas, and build something worth sharing.</p><a class="text-link" href="#/home/events">View all events ' + icon("arrow") + '</a></div>' +
+    '<div class="flashcard-stage" data-flashcard-stage role="region" aria-label="Upcoming hackathons" aria-roledescription="carousel"><div class="flashcard-stack">' + flashcards + '</div>' +
+    '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Flip through upcoming events</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP · CHENNAI, INDIA</span></footer></div>';
 }
 
@@ -307,6 +326,50 @@ function saveEvents() {
 }
 
 function bindInteractions() {
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const dark = document.documentElement.dataset.theme !== "dark";
+      if (dark) document.documentElement.dataset.theme = "dark";
+      else delete document.documentElement.dataset.theme;
+      try {
+        if (dark) localStorage.setItem("campuscode-theme", "dark");
+        else localStorage.removeItem("campuscode-theme");
+      } catch { }
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) themeColor.content = dark ? "#070d09" : "#f7f7f4";
+      document.querySelectorAll("[data-theme-toggle]").forEach((toggle) => {
+        toggle.innerHTML = icon(dark ? "sun" : "moon");
+        toggle.setAttribute("aria-label", "Switch to " + (dark ? "light" : "dark") + " theme");
+        toggle.title = "Switch to " + (dark ? "light" : "dark") + " theme";
+      });
+    });
+  });
+
+  const flashcardStage = document.querySelector("[data-flashcard-stage]");
+  if (flashcardStage) {
+    const cards = [...flashcardStage.querySelectorAll("[data-flashcard-index]")];
+    const counter = flashcardStage.querySelector("[data-flashcard-count]");
+    if (cards.length) {
+      let current = 0;
+      const showCard = (index) => {
+        current = (index + cards.length) % cards.length;
+        cards.forEach((card, cardIndex) => {
+          const distance = (cardIndex - current + cards.length) % cards.length;
+          const position = distance === 0 ? "front" : distance === 1 ? "back-one" : "back-two";
+          card.classList.remove("deck-front", "deck-back-one", "deck-back-two");
+          card.classList.add("deck-" + position);
+          card.inert = distance !== 0;
+          card.setAttribute("aria-hidden", String(distance !== 0));
+        });
+        counter.textContent = String(current + 1).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
+      };
+      flashcardStage.querySelectorAll("[data-flashcard-move]").forEach((button) => {
+        button.addEventListener("click", () => showCard(current + Number(button.dataset.flashcardMove)));
+      });
+      showCard(0);
+    }
+  }
+
   const menu = document.querySelector("[data-menu]");
   if (menu) {
     menu.addEventListener("click", () => {
@@ -596,6 +659,11 @@ function bindInteractions() {
     });
   }
 }
+
+try {
+  if (localStorage.getItem("campuscode-theme") === "dark") document.documentElement.dataset.theme = "dark";
+  else delete document.documentElement.dataset.theme;
+} catch { }
 
 window.addEventListener("hashchange", render);
 if (!location.hash) location.hash = "#/home";
