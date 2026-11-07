@@ -15,7 +15,9 @@ const iconPaths = {
   grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
   certificate: '<circle cx="12" cy="8" r="5"/><path d="m8 12-1 9 5-3 5 3-1-9M10 8l1.3 1.3L14.5 6"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/>',
-  logout: '<path d="m10 17 5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>'
+  logout: '<path d="m10 17 5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>',
+  play: '<path d="m8 5 11 7-11 7V5Z"/>',
+  pause: '<path d="M8 5v14m8-14v14"/>'
 };
 
 const defaultEvents = [
@@ -54,6 +56,7 @@ function escapeHTML(value) {
 
 let events = readEvents();
 let toastTimer;
+let previewTimer;
 
 function showToast(message) {
   toastNode.textContent = message;
@@ -113,15 +116,19 @@ function feature(iconName, title, copy) {
 function laptopArt() {
   return '<div class="hero-art" aria-label="CampusCode project workspace illustration">' +
     '<div class="hero-glow"></div><span class="hero-slash one"></span><span class="hero-slash two"></span>' +
-    '<span class="float-chip code" aria-hidden="true">&lt;/&gt;</span><span class="float-chip calendar" aria-hidden="true">' + icon("calendar") + '</span>' +
+    '<div class="why-control"><button class="float-chip code" type="button" data-why-campuscode aria-expanded="false" aria-describedby="why-campuscode-note">&lt;/&gt;</button><span class="why-note" id="why-campuscode-note" role="tooltip"><strong>Why CampusCode?</strong><small>Find your people, build projects, and ship your next idea in one place.</small></span></div>' +
+    '<span class="float-chip calendar" aria-hidden="true">' + icon("calendar") + '</span>' +
     '<span class="float-chip trophy" aria-hidden="true">' + icon("trophy") + '</span>' +
     '<div class="laptop"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
-    '<div class="screen-logo"><span class="screen-mark" aria-hidden="true"></span><b>CAMPUSCODE</b></div><div class="screen-cards"><span></span><span></span><span></span></div></div></div><div class="laptop-base"></div></div>' +
+    '<div class="preview-player" data-preview-player><div class="preview-scene"><span class="scene-slash"></span><span class="scene-window"></span><span class="scene-caption">IDEAS → PROJECTS → IMPACT</span></div><div class="preview-overlay"><span class="preview-brand">CAMPUSCODE ORIGINAL</span><button class="preview-play" type="button" data-preview-toggle aria-label="Play CampusCode preview" aria-pressed="false">' + icon("play") + '</button><strong>Build. Compete. Ship.</strong><small>A campus builder story</small></div><div class="preview-controls"><span data-preview-time>00:00 / 00:12</span><span class="preview-track"><i data-preview-progress></i></span></div></div></div></div><div class="laptop-base"></div></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
 }
 
 function renderHome(section) {
   const eventCards = defaultEvents.slice(0, 3).map(eventCard).join("");
+  const upcomingPreview = defaultEvents.filter((event) => event.status === "Upcoming").map((event) =>
+    '<div class="upcoming-preview-item"><strong>' + escapeHTML(event.name) + '</strong><small>' + escapeHTML(event.date) + '</small></div>'
+  ).join("");
   return '<div class="site-shell">' + header("home", section) +
     '<main><section class="hero-wrap"><div class="hero-copy"><span class="eyebrow"><span>ReBuild ’26</span><span class="dot"></span><span>Nov 6 – 7</span></span>' +
     '<h1>Discover Hackathons.<br>Build Projects.<br>Compete. <span class="highlight">Ship.</span></h1>' +
@@ -132,13 +139,19 @@ function renderHome(section) {
     feature("users", "Build & Submit", "Turn your ideas into projects") +
     feature("grid", "Compete", "Track rounds & results") +
     feature("certificate", "Get Certified", "Verifiable certificates & ID") +
-    '</section><section class="section-block" id="upcoming-hackathons"><div class="section-head"><h2 class="section-title">Upcoming Hackathons</h2>' +
+    '</section><section class="section-block" id="upcoming-hackathons"><div class="section-head"><div class="upcoming-title-wrap"><h2 class="section-title"><button type="button" class="upcoming-trigger" data-upcoming-toggle aria-expanded="false" aria-describedby="upcoming-preview">Upcoming Hackathons</button></h2><div class="upcoming-popover" id="upcoming-preview" role="tooltip"><strong>Coming up next</strong>' + upcomingPreview + '</div></div>' +
     '<a class="text-link" href="#/home/events">View All ' + icon("arrow") + '</a></div><div class="event-grid">' + eventCards + '</div></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP · CHENNAI, INDIA</span></footer></div>';
 }
 
-function campusIllustration() {
-  return '<div class="campus-art" aria-hidden="true"><span class="cloud left"></span><span class="cloud right"></span><svg viewBox="0 0 500 230" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+function campusIllustration(interactive = false) {
+  const interactionAttrs = interactive
+    ? ' role="button" tabindex="0" data-campus-toggle aria-expanded="false" aria-label="Show what you can do on CampusCode"'
+    : ' aria-hidden="true"';
+  const reveal = interactive
+    ? '<span class="campus-reveal"><strong>Why CampusCode?</strong><span>✓ Join hackathons</span><span>✓ Submit your projects</span><span>✓ Track results & get certified</span></span>'
+    : '';
+  return '<div class="campus-art' + (interactive ? ' campus-art-trigger' : '') + '"' + interactionAttrs + '>' + reveal + '<span class="cloud left"></span><span class="cloud right"></span><svg viewBox="0 0 500 230" fill="none" xmlns="http://www.w3.org/2000/svg">' +
     '<path d="M45 203h410" stroke="#7665ff" stroke-width="2"/><path d="M115 203v-78h110v78M90 125l80-54 80 54M140 203v-45h55v45M260 203V98h105v105M241 99l72-53 72 53M286 124h18v23h-18zm36 0h19v23h-19zM285 166h52v37h-52z" stroke="#7665ff" stroke-width="2.4" stroke-linejoin="round"/>' +
     '<path d="M171 71v-31h20v44M312 46V25h18v35" stroke="#a8e62e" stroke-width="3"/><path d="M58 203v-35m0 0c-17-8-17-28 0-37 17 9 17 29 0 37Zm378 35v-36m0 0c-16-8-16-27 0-36 16 9 16 28 0 36Z" stroke="#82b91a" stroke-width="2.5"/>' +
     '<path d="M125 125h100m35-26h105" stroke="#d5ccff" stroke-width="1.5" stroke-dasharray="4 6"/></svg></div>';
@@ -151,21 +164,21 @@ function authStory(kind) {
   }
   return '<section class="auth-story"><h1>Build.<br>Compete.<br>Ship. Together<br>on <span class="highlight">CampusCode.</span></h1>' +
     '<ul class="check-list"><li><span class="check">✓</span>Join hackathons</li><li><span class="check">✓</span>Submit your projects</li><li><span class="check">✓</span>Track results & get certified</li></ul>' +
-    campusIllustration() + '</section>';
+    campusIllustration(true) + '</section>';
 }
 
 function field(name, label, placeholder, type, iconName, extra) {
   const isPassword = type === "password";
   return '<div class="form-field"><label for="' + name + '">' + label + '</label><div class="input-wrap">' + icon(iconName, "input-icon") +
-    '<input id="' + name + '" name="' + name + '" type="' + type + '" placeholder="' + placeholder + '"' + (extra || "") + ' required>' +
+    '<input id="' + name + '" name="' + name + '" type="' + type + '" placeholder="' + placeholder + '"' + (extra || "") + '>' +
     (isPassword ? '<button class="eye-toggle" type="button" aria-label="Show password" data-password="' + name + '">' + icon("eye") + '</button>' : '') + '</div></div>';
 }
 
 function renderLogin() {
   return '<div class="site-shell">' + header("login") + '<main class="auth-shell">' + authStory("login") +
     '<section class="auth-card"><h2>Login to your account</h2><p class="card-subtitle">Access your CampusCode dashboard</p>' +
-    '<form id="login-form">' + field("login-id", "CampusCode ID / Email", "Enter your CampusCode ID or email", "text", "mail", ' autocomplete="username"') +
-    field("login-password", "Password", "Enter your password", "password", "lock", ' minlength="8" autocomplete="current-password"') +
+    '<form id="login-form" novalidate>' + field("login-id", "CampusCode ID / Email", "Enter your CampusCode ID or email", "text", "mail", ' autocomplete="username"') +
+    field("login-password", "Password", "Enter your password", "password", "lock", ' autocomplete="current-password"') +
     '<div class="forgot-row"><button type="button" data-forgot>Forgot password?</button></div>' +
     '<button class="btn btn-primary form-submit" type="submit">Login ' + icon("arrow") + '</button>' +
     '<div class="divider">or continue with</div><div class="social-row"><button class="social-btn" type="button" data-social="Google">🌐 &nbsp; Continue with Google</button><button class="social-btn" type="button" data-social="GitHub">◉ &nbsp; Continue with GitHub</button></div>' +
@@ -176,11 +189,10 @@ function renderLogin() {
 function renderRegister() {
   return '<div class="site-shell">' + header("register") + '<main class="auth-shell register">' + authStory("register") +
     '<section class="auth-card"><h2>Create your account</h2><p class="card-subtitle">Register and start building today.</p>' +
-    '<form id="register-form">' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"') +
-    field("campus-id", "CampusCode ID (Unique)", "e.g. CC12345", "text", "grid", ' pattern="CC[0-9]{4,}" title="Use CC followed by at least four digits" autocomplete="username"') +
+    '<form id="register-form" novalidate>' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"') +
     field("register-email", "Email", "Enter your email", "email", "mail", ' autocomplete="email"') +
-    field("register-password", "Password", "Create a strong password", "password", "lock", ' minlength="8" autocomplete="new-password"') +
-    '<small class="password-hint">Use at least 8 characters.</small><label class="terms-row"><input name="terms" type="checkbox" required><span>I agree to the <a href="#/terms" data-demo-feature="Terms of Service">Terms of Service</a> and <a href="#/privacy" data-demo-feature="Privacy Policy">Privacy Policy</a></span></label>' +
+    field("register-password", "Password", "Create a password", "password", "lock", ' autocomplete="new-password"') +
+    '<label class="terms-row"><input name="terms" type="checkbox"><span>I agree to the <a href="#/terms" data-demo-feature="Terms of Service">Terms of Service</a> and <a href="#/privacy" data-demo-feature="Privacy Policy">Privacy Policy</a></span></label>' +
     '<button class="btn btn-primary form-submit" type="submit">Register ' + icon("arrow") + '</button><p class="form-foot">Already have an account? <a href="#/login">Login</a></p></form></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP</span></footer></div>';
 }
@@ -276,6 +288,8 @@ function routeInfo() {
 }
 
 function render() {
+  window.clearInterval(previewTimer);
+  previewTimer = undefined;
   const { route, section } = routeInfo();
   if (route === "login") app.innerHTML = renderLogin();
   else if (route === "register") app.innerHTML = renderRegister();
@@ -329,7 +343,7 @@ function bindInteractions() {
   if (forgot) {
     forgot.addEventListener("click", () => {
       const value = document.querySelector("#login-id").value.trim();
-      showToast(value ? "Password reset flow is a demo for " + value + "." : "Enter your CampusCode ID or email first.");
+      showToast(value ? "Password reset flow is a demo for " + value + "." : "Password reset is a preview-only feature.");
     });
   }
 
@@ -337,9 +351,8 @@ function bindInteractions() {
   if (login) {
     login.addEventListener("submit", (event) => {
       event.preventDefault();
-      if (!login.reportValidity()) return;
       const identifier = document.querySelector("#login-id").value.trim();
-      const name = identifier.includes("@") ? identifier.split("@")[0].replace(/[._-]/g, " ") : "Harshit";
+      const name = identifier.includes("@") && identifier.split("@")[0] ? identifier.split("@")[0].replace(/[._-]/g, " ") : "Harshit";
       storeUser(name.split(" ").map((part) => part ? part[0].toUpperCase() + part.slice(1) : "").join(" "), identifier.startsWith("CC") ? identifier : "CC12876", identifier);
       location.hash = "#/dashboard";
       showToast("Welcome back. You’re signed in to the demo.");
@@ -350,15 +363,65 @@ function bindInteractions() {
   if (register) {
     register.addEventListener("submit", (event) => {
       event.preventDefault();
-      if (!register.reportValidity()) return;
-      const name = document.querySelector("#full-name").value.trim();
-      const id = document.querySelector("#campus-id").value.trim();
+      const name = document.querySelector("#full-name").value.trim() || "Harshit";
       const email = document.querySelector("#register-email").value.trim();
-      storeUser(name, id, email);
+      storeUser(name, "CC12876", email);
       location.hash = "#/dashboard";
       showToast("Your demo account is ready, " + name.split(" ")[0] + ".");
     });
   }
+
+  const whyButton = document.querySelector("[data-why-campuscode]");
+  if (whyButton) whyButton.addEventListener("click", () => {
+    const open = whyButton.closest(".why-control").classList.toggle("open");
+    whyButton.setAttribute("aria-expanded", String(open));
+  });
+
+  const upcomingButton = document.querySelector("[data-upcoming-toggle]");
+  if (upcomingButton) upcomingButton.addEventListener("click", () => {
+    const open = upcomingButton.closest(".upcoming-title-wrap").classList.toggle("open");
+    upcomingButton.setAttribute("aria-expanded", String(open));
+  });
+
+  const campusArt = document.querySelector("[data-campus-toggle]");
+  if (campusArt) {
+    const toggleCampusReveal = () => {
+      const open = campusArt.classList.toggle("open");
+      campusArt.setAttribute("aria-expanded", String(open));
+    };
+    campusArt.addEventListener("click", toggleCampusReveal);
+    campusArt.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleCampusReveal();
+      }
+    });
+  }
+
+  const previewButton = document.querySelector("[data-preview-toggle]");
+  if (previewButton) previewButton.addEventListener("click", () => {
+    const player = previewButton.closest("[data-preview-player]");
+    const playing = player.classList.toggle("is-playing");
+    previewButton.setAttribute("aria-pressed", String(playing));
+    previewButton.setAttribute("aria-label", playing ? "Pause CampusCode preview" : "Play CampusCode preview");
+    previewButton.innerHTML = icon(playing ? "pause" : "play");
+    if (playing) {
+      let seconds = 0;
+      const timeNode = player.querySelector("[data-preview-time]");
+      const progressNode = player.querySelector("[data-preview-progress]");
+      const updatePreview = () => {
+        seconds = (seconds + 1) % 13;
+        timeNode.textContent = "00:" + String(seconds).padStart(2, "0") + " / 00:12";
+        progressNode.style.width = Math.min(seconds / 12 * 100, 100) + "%";
+      };
+      window.clearInterval(previewTimer);
+      updatePreview();
+      previewTimer = window.setInterval(updatePreview, 1000);
+    } else {
+      window.clearInterval(previewTimer);
+      previewTimer = undefined;
+    }
+  });
 
   document.querySelectorAll("[data-toggle-event]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -415,3 +478,4 @@ function bindInteractions() {
 window.addEventListener("hashchange", render);
 if (!location.hash) location.hash = "#/home";
 render();
+
