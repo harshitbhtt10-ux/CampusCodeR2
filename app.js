@@ -116,9 +116,9 @@ function feature(iconName, title, copy) {
 function laptopArt() {
   return '<div class="hero-art" aria-label="CampusCode project workspace illustration">' +
     '<div class="hero-glow"></div><span class="hero-slash one"></span><span class="hero-slash two"></span>' +
-    '<div class="why-control"><button class="float-chip code" type="button" data-why-campuscode aria-expanded="false" aria-describedby="why-campuscode-note">&lt;/&gt;</button><span class="why-note" id="why-campuscode-note" role="tooltip"><strong>Why CampusCode?</strong><small>Find your people, build projects, and ship your next idea in one place.</small></span></div>' +
-    '<span class="float-chip calendar" aria-hidden="true">' + icon("calendar") + '</span>' +
-    '<span class="float-chip trophy" aria-hidden="true">' + icon("trophy") + '</span>' +
+    '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Build with student teams</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
+    '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Find your next hackathon</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
+    '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Compete and get recognized</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
     '<div class="laptop"><div class="laptop-screen"><div class="screen-content"><div class="screen-top"><span class="screen-dots"><i></i><i></i><i></i></span><span class="screen-line"></span></div>' +
     '<div class="preview-player" data-preview-player><div class="preview-scene"><span class="scene-slash"></span><span class="scene-window"></span><span class="scene-caption">IDEAS → PROJECTS → IMPACT</span></div><div class="preview-overlay"><span class="preview-brand">CAMPUSCODE ORIGINAL</span><button class="preview-play" type="button" data-preview-toggle aria-label="Play CampusCode preview" aria-pressed="false">' + icon("play") + '</button><strong>Build. Compete. Ship.</strong><small>A campus builder story</small></div><div class="preview-controls"><span data-preview-time>00:00 / 00:12</span><span class="preview-track"><i data-preview-progress></i></span></div></div></div></div><div class="laptop-base"></div></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
@@ -132,7 +132,7 @@ function renderHome(section) {
   return '<div class="site-shell">' + header("home", section) +
     '<main><section class="hero-wrap"><div class="hero-copy"><span class="eyebrow"><span>ReBuild ’26</span><span class="dot"></span><span>Nov 6 – 7</span></span>' +
     '<h1>Discover Hackathons.<br>Build Projects.<br>Compete. <span class="highlight">Ship.</span></h1>' +
-    '<p>The digital home for student innovation.<br>Run, join and manage hackathons — all in one place.</p>' +
+    '<p>CampusCode brings students together around campus hackathons: find a challenge, build with a team, submit your project, and share what you shipped.</p>' +
     '<div class="hero-actions"><a class="btn btn-primary" href="#/home/events">Explore Hackathons ' + icon("arrow") + '</a><a class="btn btn-outline" href="#/register">Join CampusCode</a></div></div>' +
     laptopArt() + '</section><section class="feature-row" aria-label="CampusCode features">' +
     feature("calendar", "Find Hackathons", "Explore campus & national events") +
@@ -371,10 +371,11 @@ function bindInteractions() {
     });
   }
 
-  const whyButton = document.querySelector("[data-why-campuscode]");
-  if (whyButton) whyButton.addEventListener("click", () => {
-    const open = whyButton.closest(".why-control").classList.toggle("open");
-    whyButton.setAttribute("aria-expanded", String(open));
+  document.querySelectorAll("[data-float-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const open = button.closest(".float-control").classList.toggle("open");
+      button.setAttribute("aria-expanded", String(open));
+    });
   });
 
   const upcomingButton = document.querySelector("[data-upcoming-toggle]");
