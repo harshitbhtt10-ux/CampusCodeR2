@@ -1401,3 +1401,18 @@ body::after { display: none !important; }
   .auth-card-brandmark { top: 21px; right: 22px; width: 35px; height: 31px; gap: 3px; }
   .auth-card-brandmark i { width: 7px; height: 27px; }
 }
+/* Keep the hero, feature row, and card from colliding at laptop and tablet widths. */
+.auth-card-login .social-row { grid-template-columns: 1fr; }
+.auth-card-login .google-btn { grid-column: 1 / -1; }
+.auth-card-login .form-submit { position: relative; justify-content: center; }
+.auth-card-login .form-submit svg { position: absolute; right: 24px; }
+.auth-card-login { background: #fff; }
+@media (max-width: 1100px) {
+  .auth-shell,.auth-shell.register { min-height: 0; grid-template-columns: 1fr; gap: 26px; padding: 32px clamp(24px,5vw,56px) 42px; }
+  .auth-story,.register .auth-story { width: min(100%,680px); max-width: 680px; justify-self: center; }
+  .auth-card-frame,.auth-card-frame-login,.auth-card-register { width: 100%; max-width: 680px; justify-self: center; }
+  .auth-benefit-row { max-width: 460px; }
+}
+@media (max-width: 760px) {
+  .auth-shell,.auth-shell.register { gap: 24px; padding: 25px 24px 36px; }
+}
