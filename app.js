@@ -187,11 +187,11 @@ function authStory(kind) {
   if (isRegister) {
     return '<section class="auth-story auth-story-register" aria-labelledby="auth-story-heading">' +
       '<span class="auth-story-pill">Create Account</span>' +
-      '<div class="auth-story-copy"><h1 id="auth-story-heading">Join the<br>CampusCode<br><span class="highlight">Community.</span></h1><p>Be part of a student-first hackathon platform built for builders like you.</p></div>' +
-      '<ul class="auth-benefits"><li><span>✓</span>Join hackathons</li><li><span>✓</span>Submit your projects</li><li><span>✓</span>Track results &amp; get certified</li></ul>' +
-      '<div class="auth-register-art" aria-hidden="true"><span class="auth-art-orbit orbit-one"></span><span class="auth-art-orbit orbit-two"></span><span class="auth-art-spark spark-purple">✦</span><span class="auth-art-spark spark-lime">✦</span>' +
-      '<div class="auth-art-project"><span class="auth-art-code">&lt;/&gt;</span><i></i><i></i><i></i></div>' +
-      '<div class="auth-art-award">' + icon("trophy") + '<span>SHIP IT</span></div><div class="auth-art-community">' + icon("users") + '</div></div></section>';
+      '<div class="auth-story-copy"><h1 id="auth-story-heading">Join the<br>CampusCode<br><span class="highlight">Community.</span></h1></div>' +
+      '<div class="auth-register-art"><span class="auth-art-orbit orbit-one" aria-hidden="true"></span><span class="auth-art-orbit orbit-two" aria-hidden="true"></span><span class="auth-art-spark spark-purple" aria-hidden="true">✦</span><span class="auth-art-spark spark-lime" aria-hidden="true">✦</span>' +
+      '<div class="auth-art-project" aria-hidden="true"><span class="auth-art-code">&lt;/&gt;</span><i></i><i></i><i></i></div>' +
+      '<div class="auth-art-award" aria-hidden="true">' + icon("trophy") + '<span>SHIP IT</span></div><div class="auth-art-trigger"><button class="auth-art-community" type="button" data-auth-benefits-toggle aria-expanded="false" aria-describedby="auth-register-benefits" aria-label="Show CampusCode benefits">' + icon("users") + '</button>' +
+      '<span class="auth-art-benefits" id="auth-register-benefits" role="tooltip"><strong>Why CampusCode?</strong><span>✓ Join hackathons</span><span>✓ Submit your projects</span><span>✓ Track results &amp; get certified</span></span></div></div></section>';
   }
   return '<section class="auth-story auth-story-login" aria-labelledby="auth-story-heading">' +
     '<span class="auth-story-pill">Welcome Back <span aria-hidden="true">👋</span></span>' +
@@ -657,6 +657,14 @@ function bindInteractions() {
         event.preventDefault();
         toggleCampusReveal();
       }
+    });
+  }
+
+  const authBenefitsButton = document.querySelector("[data-auth-benefits-toggle]");
+  if (authBenefitsButton) {
+    authBenefitsButton.addEventListener("click", () => {
+      const open = authBenefitsButton.closest(".auth-register-art").classList.toggle("open");
+      authBenefitsButton.setAttribute("aria-expanded", String(open));
     });
   }
 
