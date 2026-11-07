@@ -541,6 +541,7 @@ body::before {
   box-shadow: 15px 18px 0 rgba(118,101,255,.035), 30px 37px 70px rgba(65,48,151,.07);
   transform: perspective(1100px) rotateX(54deg) rotateZ(-17deg);
   transform-origin: top right;
+  animation: ambient-plane-one 28s ease-in-out infinite alternate;
 }
 body::after {
   bottom: -23vh;
@@ -551,38 +552,58 @@ body::after {
   box-shadow: 13px 16px 0 rgba(118,101,255,.035), 25px 32px 65px rgba(65,48,151,.06);
   transform: perspective(1000px) rotateX(57deg) rotateZ(21deg);
   transform-origin: bottom left;
+  animation: ambient-plane-two 34s ease-in-out infinite alternate;
 }
 .site-shell, .dashboard-shell { position: relative; z-index: 1; }
+@keyframes ambient-plane-one {
+  to { transform: perspective(1100px) rotateX(52deg) rotateZ(-13deg) translate3d(-1.2vw,1.2vh,0); }
+}
+@keyframes ambient-plane-two {
+  to { transform: perspective(1000px) rotateX(54deg) rotateZ(17deg) translate3d(1vw,-1.4vh,0); }
+}
 
 /* Keep the laptop on the right side of the illustration so its floating controls stay clear. */
 .hero-art { min-height: 350px; overflow: visible; }
 .laptop {
   position: absolute;
   top: 50%;
-  left: 21%;
-  width: min(380px, 75%);
+  left: 20%;
+  width: min(380px, 73%);
   margin: 0;
-  transform: translateY(-50%) rotate(-7deg);
+  transform: translateY(-50%) perspective(900px) rotateX(0deg) rotateY(-1deg) rotateZ(-6deg);
+  transform-style: preserve-3d;
   transform-origin: center;
+  animation: laptop-rotate 10s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes laptop-rotate {
+  0%, 100% { transform: translateY(-50%) perspective(900px) rotateX(1deg) rotateY(-6deg) rotateZ(-7deg); }
+  50% { transform: translateY(-50%) perspective(900px) rotateX(-1deg) rotateY(5deg) rotateZ(-4deg); }
 }
 .laptop-screen { height: 218px; padding: 10px; }
 .screen-content { padding: 10px 11px; }
-.why-control {
+.float-control {
   position: absolute;
   z-index: 4;
+}
+.why-control {
   top: 34%;
   left: 0;
 }
-.float-chip.code {
+.calendar-control { top: 7%; right: 18%; }
+.trophy-control { right: 2%; bottom: 13%; }
+.float-control .float-chip {
   position: relative;
   top: auto;
+  right: auto;
+  bottom: auto;
   left: auto;
-  width: 72px;
-  height: 46px;
+  padding: 0;
   cursor: pointer;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.why-control:hover .float-chip.code, .why-control:focus-within .float-chip.code, .why-control.open .float-chip.code {
+.why-control .float-chip.code { width: 72px; height: 46px; }
+.float-control:hover .float-chip, .float-control:focus-within .float-chip, .float-control.open .float-chip {
   transform: translateY(-3px) scale(1.04);
   box-shadow: 0 13px 25px rgba(52,39,121,.2);
 }
@@ -607,14 +628,18 @@ body::after {
 }
 .why-note strong { font-size: 12px; }
 .why-note small { color: var(--muted); font-size: 10px; line-height: 1.45; }
-.why-control:hover .why-note, .why-control:focus-within .why-note, .why-control.open .why-note {
+.float-control:hover .why-note, .float-control:focus-within .why-note, .float-control.open .why-note {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
-.float-chip.calendar { top: 7%; right: 18%; }
-.float-chip.trophy { right: 2%; bottom: 13%; }
+.calendar-control .why-note { top: -8px; right: calc(100% + 12px); left: auto; }
+.trophy-control .why-note { top: -18px; right: calc(100% + 12px); left: auto; }
 .hero-caption { right: 5%; bottom: 1%; }
+.hero-glow { animation: hero-glow-breathe 8s ease-in-out infinite alternate; }
+@keyframes hero-glow-breathe {
+  to { opacity: .72; transform: scale(1.08); }
+}
 
 /* A lightweight playable preview gives the laptop screen its own motion. */
 .preview-player {
@@ -741,17 +766,30 @@ body .btn-lime:hover, body .btn-lime:hover * { color: var(--ink); }
   body::after { bottom: -14vh; left: -31vw; width: 75vw; height: 53vw; }
   .hero-art { min-height: 315px; }
   .laptop { left: 20%; width: min(380px, 76%); }
-  .float-chip.calendar { right: 14%; }
-  .float-chip.trophy { right: 1%; bottom: 10%; }
+  .calendar-control { right: 14%; }
+  .trophy-control { right: 1%; bottom: 10%; }
   .why-control { top: 31%; left: 1%; }
   .why-note { top: -57px; left: 50px; width: 190px; }
+  .calendar-control .why-note, .trophy-control .why-note { top: calc(100% + 9px); right: -30px; left: auto; width: 195px; }
   .campus-reveal { right: 4%; bottom: 13px; width: min(245px, 82%); }
 }
 
 @media (max-width: 390px) {
   .why-note { left: 0; top: 55px; }
-  .float-chip.calendar { right: 9%; }
+  .calendar-control { right: 9%; }
   .hero-caption { right: 0; font-size: 8px; }
   .laptop { left: 23%; width: 70%; }
+}
+
+/* Compact sign-in actions leave more room for the campus wordmark. */
+.site-header .header-actions .btn {
+  min-height: 31px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after, .hero-glow, .laptop { animation: none !important; }
 }
 
