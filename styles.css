@@ -522,7 +522,11 @@ body {
     radial-gradient(ellipse at 12% 4%, rgba(168,230,46,.10), transparent 34%),
     radial-gradient(ellipse at 90% 88%, rgba(118,101,255,.12), transparent 38%),
     var(--paper);
+  background-size: 135% 135%, 135% 135%, auto;
+  background-position: 0 0, 100% 100%, 0 0;
+  animation: ambient-color-shift 25s ease-in-out infinite alternate;
 }
+@keyframes ambient-color-shift { to { background-position: 100% 26%, 0 74%, 0 0; } }
 body::before, body::after {
   position: fixed;
   z-index: -1;
@@ -537,7 +541,10 @@ body::before {
   right: -10vw;
   width: min(47vw, 660px);
   height: min(37vw, 470px);
-  background: linear-gradient(142deg, rgba(255,255,255,.84), rgba(213,203,255,.44) 52%, rgba(168,230,46,.18));
+  background:
+    repeating-linear-gradient(0deg, rgba(118,101,255,.045) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(90deg, rgba(118,101,255,.045) 0 1px, transparent 1px 18px),
+    linear-gradient(142deg, rgba(255,255,255,.84), rgba(213,203,255,.44) 52%, rgba(168,230,46,.18));
   box-shadow: 15px 18px 0 rgba(118,101,255,.035), 30px 37px 70px rgba(65,48,151,.07);
   transform: perspective(1100px) rotateX(54deg) rotateZ(-17deg);
   transform-origin: top right;
@@ -548,7 +555,10 @@ body::after {
   left: -13vw;
   width: min(40vw, 530px);
   height: min(28vw, 360px);
-  background: linear-gradient(130deg, rgba(168,230,46,.22), rgba(255,255,255,.72) 48%, rgba(190,176,255,.24));
+  background:
+    radial-gradient(rgba(118,101,255,.09) 1px, transparent 1.5px),
+    linear-gradient(130deg, rgba(168,230,46,.22), rgba(255,255,255,.72) 48%, rgba(190,176,255,.24));
+  background-size: 19px 19px, auto;
   box-shadow: 13px 16px 0 rgba(118,101,255,.035), 25px 32px 65px rgba(65,48,151,.06);
   transform: perspective(1000px) rotateX(57deg) rotateZ(21deg);
   transform-origin: bottom left;
@@ -570,18 +580,55 @@ body::after {
   left: 20%;
   width: min(380px, 73%);
   margin: 0;
-  transform: translateY(-50%) perspective(900px) rotateX(0deg) rotateY(-1deg) rotateZ(-6deg);
+  transform: translateY(-50%) perspective(900px) rotateX(var(--laptop-rotate-x, 0deg)) rotateY(var(--laptop-rotate-y, -1deg)) rotateZ(-6deg);
   transform-style: preserve-3d;
   transform-origin: center;
-  animation: laptop-rotate 10s ease-in-out infinite alternate;
-  will-change: transform;
+  transition: transform .3s ease-out;
+  cursor: grab;
+  touch-action: pan-y;
 }
-@keyframes laptop-rotate {
-  0%, 100% { transform: translateY(-50%) perspective(900px) rotateX(1deg) rotateY(-6deg) rotateZ(-7deg); }
-  50% { transform: translateY(-50%) perspective(900px) rotateX(-1deg) rotateY(5deg) rotateZ(-4deg); }
-}
+.laptop.dragging { transition: none; cursor: grabbing; }
+.laptop:focus-visible { outline: 3px solid rgba(118,101,255,.36); outline-offset: 5px; border-radius: 15px; }
+.laptop:focus:not(:focus-visible) { outline: none; }
 .laptop-screen { height: 218px; padding: 10px; }
 .screen-content { padding: 10px 11px; }
+.laptop-controls {
+  position: absolute;
+  z-index: 3;
+  bottom: 8px;
+  left: 55%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 7px;
+  color: #514d63;
+  background: rgba(255,255,255,.94);
+  border: 1px solid rgba(205,198,236,.9);
+  border-radius: 999px;
+  box-shadow: 0 7px 17px rgba(36,27,89,.1);
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.laptop-controls button {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  color: var(--purple-dark);
+  background: #f2efff;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  place-items: center;
+}
+.laptop-controls button:hover { color: #fff; background: var(--purple-dark); }
+.laptop-controls span { padding: 0 3px; font-size: 8px; font-weight: 800; letter-spacing: .04em; white-space: nowrap; }
+.laptop-controls .reset-view { width: auto; padding: 0 9px; color: #514d63; background: transparent; border-radius: 999px; font-size: 9px; font-weight: 700; }
+.laptop-controls .reset-view:hover { color: var(--purple-dark); background: #f2efff; }
+.laptop-controls button:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+.laptop.dragging .preview-player, .laptop.dragging .preview-play { pointer-events: none; }
+.hero-caption { right: auto; bottom: 1%; left: 1%; max-width: 125px; font-size: 8px; line-height: 1.4; }
 .float-control {
   position: absolute;
   z-index: 4;
@@ -628,6 +675,7 @@ body::after {
 }
 .why-note strong { font-size: 12px; }
 .why-note small { color: var(--muted); font-size: 10px; line-height: 1.45; }
+.why-control .why-note { top: auto; bottom: calc(100% + 12px); left: 0; }
 .float-control:hover .why-note, .float-control:focus-within .why-note, .float-control.open .why-note {
   opacity: 1;
   visibility: visible;
@@ -777,8 +825,9 @@ body .btn-lime:hover, body .btn-lime:hover * { color: var(--ink); }
 @media (max-width: 390px) {
   .why-note { left: 0; top: 55px; }
   .calendar-control { right: 9%; }
-  .hero-caption { right: 0; font-size: 8px; }
+  .hero-caption { display: none; }
   .laptop { left: 23%; width: 70%; }
+  .laptop-controls { left: 56%; gap: 3px; padding: 4px 5px; }
 }
 
 /* Compact sign-in actions leave more room for the campus wordmark. */
@@ -790,6 +839,6 @@ body .btn-lime:hover, body .btn-lime:hover * { color: var(--ink); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before, body::after, .hero-glow, .laptop { animation: none !important; }
+  body, body::before, body::after, .hero-glow, .laptop { animation: none !important; }
 }
 
