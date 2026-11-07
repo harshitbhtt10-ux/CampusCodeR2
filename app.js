@@ -16,8 +16,6 @@ const iconPaths = {
   certificate: '<circle cx="12" cy="8" r="5"/><path d="m8 12-1 9 5-3 5 3-1-9M10 8l1.3 1.3L14.5 6"/>',
   settings: '<circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/>',
   logout: '<path d="m10 17 5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>',
-  moon: '<path d="M20.6 14.2A8.5 8.5 0 0 1 9.8 3.4 8.5 8.5 0 1 0 20.6 14.2Z"/>',
-  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
   play: '<path d="m8 5 11 7-11 7V5Z"/>',
   pause: '<path d="M8 5v14m8-14v14"/>'
 };
@@ -70,14 +68,9 @@ function brand() {
   return '<a class="brand" href="#/home" aria-label="CampusCode home"><span class="brand-crop" role="img" aria-label="CampusCode"></span></a>';
 }
 
-function themeToggle() {
-  const dark = document.documentElement.dataset.theme === "dark";
-  return '<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to ' + (dark ? "light" : "dark") + ' theme" title="Switch to ' + (dark ? "light" : "dark") + ' theme">' + icon(dark ? "sun" : "moon") + '</button>';
-}
-
 function header(route, section) {
   if (route === "login" || route === "register") {
-    return '<header class="site-header auth-header">' + brand() + '<div class="auth-header-actions">' + themeToggle() + '<a class="back-home" href="#/home">← <span>Back to Home</span></a></div></header>';
+    return '<header class="site-header auth-header">' + brand() + '<div class="auth-header-actions"><a class="back-home" href="#/home">← <span>Back to Home</span></a></div></header>';
   }
   if (route === "dashboard") {
     const active = section === "events" ? "hackathons" : "dashboard";
@@ -87,7 +80,7 @@ function header(route, section) {
       '<a class="' + (active === "hackathons" ? "active" : "") + '" href="#/dashboard/events">' + icon("trophy") + 'Hackathons</a>' +
       '<a href="#/dashboard/ai-tools" data-demo-feature="AI Tools">' + icon("grid") + 'AI Tools</a>' +
       '<a href="#/dashboard/community" data-demo-feature="Community">' + icon("users") + 'Community</a></nav>' +
-      '<div class="dash-tools">' + themeToggle() + '<button class="nav-icon" type="button" data-notifications aria-label="Notifications">' + icon("bell") + '<span class="notification-dot"></span></button>' +
+      '<div class="dash-tools"><button class="nav-icon" type="button" data-notifications aria-label="Notifications">' + icon("bell") + '<span class="notification-dot"></span></button>' +
       '<button class="avatar" type="button" data-profile aria-label="Profile menu">' + escapeHTML((readSession().name || "Harshit").slice(0, 1).toUpperCase()) + '</button></div></header>';
   }
   return '<header class="site-header">' + brand() +
@@ -97,7 +90,7 @@ function header(route, section) {
     '<a href="#/home/community" data-demo-feature="Community">Community</a>' +
     '<a href="#/home/about" data-demo-feature="About">About</a>' +
     '<a class="mobile-only" href="#/login">Login</a><a class="mobile-only" href="#/register">Register</a></nav>' +
-    '<div class="header-actions">' + themeToggle() + '<a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
+    '<div class="header-actions"><a class="btn btn-outline btn-small" href="#/login">Login</a><a class="btn btn-primary btn-small" href="#/register">Register</a>' +
     '<button class="mobile-menu" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu>' + icon("grid") + '</button></div></header>';
 }
 
@@ -325,25 +318,6 @@ function saveEvents() {
 }
 
 function bindInteractions() {
-  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const dark = document.documentElement.dataset.theme !== "dark";
-      if (dark) document.documentElement.dataset.theme = "dark";
-      else delete document.documentElement.dataset.theme;
-      try {
-        if (dark) localStorage.setItem("campuscode-theme", "dark");
-        else localStorage.removeItem("campuscode-theme");
-      } catch { }
-      const themeColor = document.querySelector('meta[name="theme-color"]');
-      if (themeColor) themeColor.content = dark ? "#070d09" : "#f7f7f4";
-      document.querySelectorAll("[data-theme-toggle]").forEach((toggle) => {
-        toggle.innerHTML = icon(dark ? "sun" : "moon");
-        toggle.setAttribute("aria-label", "Switch to " + (dark ? "light" : "dark") + " theme");
-        toggle.title = "Switch to " + (dark ? "light" : "dark") + " theme";
-      });
-    });
-  });
-
   const flashcardStage = document.querySelector("[data-flashcard-stage]");
   if (flashcardStage) {
     const cards = [...flashcardStage.querySelectorAll("[data-flashcard-index]")];
@@ -709,11 +683,6 @@ function bindInteractions() {
   }
 }
 
-try {
-  if (localStorage.getItem("campuscode-theme") === "dark") document.documentElement.dataset.theme = "dark";
-  else delete document.documentElement.dataset.theme;
-} catch { }
-
 window.addEventListener("hashchange", render);
 if (!location.hash) location.hash = "#/home";
 render();
@@ -740,4 +709,3 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   window.addEventListener("pointerleave", resetAmbientParallax);
   window.addEventListener("blur", resetAmbientParallax);
 }
-
