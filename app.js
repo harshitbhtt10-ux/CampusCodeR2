@@ -549,18 +549,20 @@ render();
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const updateAmbientParallax = (event) => {
     if (event.pointerType === "touch") return;
-    const horizontal = event.clientX / Math.max(window.innerWidth, 1) - .5;
-    const vertical = event.clientY / Math.max(window.innerHeight, 1) - .5;
+    const width = Math.max(window.innerWidth, 1);
+    const height = Math.max(window.innerHeight, 1);
+    const horizontal = event.clientX / width - .5;
+    const vertical = event.clientY / height - .5;
     document.body.style.setProperty("--ambient-path-x", (-horizontal * 30).toFixed(1) + "px");
     document.body.style.setProperty("--ambient-path-y", (-vertical * 22).toFixed(1) + "px");
-    document.body.style.setProperty("--ambient-particle-x", (horizontal * 18).toFixed(1) + "px");
-    document.body.style.setProperty("--ambient-particle-y", (vertical * 14).toFixed(1) + "px");
+    document.body.style.setProperty("--ambient-glow-x", ((event.clientX / width) * 100).toFixed(1) + "%");
+    document.body.style.setProperty("--ambient-glow-y", ((event.clientY / height) * 100).toFixed(1) + "%");
   };
   const resetAmbientParallax = () => {
     document.body.style.setProperty("--ambient-path-x", "0px");
     document.body.style.setProperty("--ambient-path-y", "0px");
-    document.body.style.setProperty("--ambient-particle-x", "0px");
-    document.body.style.setProperty("--ambient-particle-y", "0px");
+    document.body.style.setProperty("--ambient-glow-x", "50%");
+    document.body.style.setProperty("--ambient-glow-y", "50%");
   };
   window.addEventListener("pointermove", updateAmbientParallax, { passive: true });
   window.addEventListener("pointerleave", resetAmbientParallax);
