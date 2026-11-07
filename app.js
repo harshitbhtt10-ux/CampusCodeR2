@@ -120,7 +120,7 @@ function hackathonFlashcard(event, index, total) {
   const savedEvent = events.find((item) => item.id === event.id) || {};
   const details = { ...defaultEvent, ...event, ...savedEvent };
   const position = index === 0 ? "front" : index === 1 ? "back-one" : "back-two";
-  return '<article class="hackathon-flashcard deck-' + position + '" data-flashcard-index="' + index + '" role="group" aria-roledescription="slide" aria-label="' + (index + 1) + ' of ' + total + ': ' + escapeHTML(details.name) + '"' + (index ? ' aria-hidden="true" inert' : '') + '>' +
+  return '<article class="hackathon-flashcard deck-' + position + '" data-flashcard-index="' + index + '" tabindex="' + (index ? '-1' : '0') + '" role="group" aria-roledescription="slide" aria-keyshortcuts="Enter Space" aria-label="' + (index + 1) + ' of ' + total + ': ' + escapeHTML(details.name) + '. Press Enter to see the next event."' + (index ? ' aria-hidden="true" inert' : '') + '>' +
     '<div class="flashcard-chrome"><span class="flashcard-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="flashcard-chrome-line"></span><span class="flashcard-chrome-label">CAMPUSCODE / HACKATHON</span></div>' +
     '<div class="flashcard-content"><div class="flashcard-meta"><span class="flashcard-number">' + String(index + 1).padStart(2, "0") + '</span><span class="flashcard-category">' + escapeHTML(details.category || "Student hackathon") + '</span>' + statusPill(details.status) + '</div>' +
     '<h3>' + escapeHTML(details.name) + '</h3><p>' + escapeHTML(details.description) + '</p>' +
@@ -149,7 +149,6 @@ function renderHome(section) {
   return '<div class="site-shell">' + header("home", section) +
     '<main><section class="hero-wrap"><div class="hero-copy"><span class="eyebrow"><span>ReBuild ’26</span><span class="dot"></span><span>Nov 6 – 7</span></span>' +
     '<h1>Discover Hackathons.<br>Build Projects.<br>Compete. <span class="highlight">Ship.</span></h1>' +
-    '<p>CampusCode brings students together around campus hackathons: find a challenge, build with a team, submit your project, and share what you shipped.</p>' +
     '<div class="hero-actions"><a class="btn btn-primary" href="#/home/events">Explore Hackathons ' + icon("arrow") + '</a><a class="btn btn-outline" href="#/register">Join CampusCode</a></div></div>' +
     laptopArt() + '</section><section class="feature-row" aria-label="CampusCode features">' +
     feature("calendar", "Find Hackathons", "Explore campus & national events") +
@@ -158,7 +157,7 @@ function renderHome(section) {
     feature("certificate", "Get Certified", "Verifiable certificates & ID") +
     '</section><section class="section-block flashcard-section" id="upcoming-hackathons"><div class="flashcard-intro"><span class="flashcard-eyebrow">YOUR NEXT BUILD STARTS HERE</span><h2>Upcoming<br>Hackathons</h2><p>Three student challenges. Pick one, bring your ideas, and build something worth sharing.</p><a class="text-link" href="#/home/events">View all events ' + icon("arrow") + '</a></div>' +
     '<div class="flashcard-stage" data-flashcard-stage role="region" aria-label="Upcoming hackathons" aria-roledescription="carousel"><div class="flashcard-stack">' + flashcards + '</div>' +
-    '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Flip through upcoming events</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section></main>' +
+    '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Click a card or use arrows to flip</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP · CHENNAI, INDIA</span></footer></div>';
 }
 
@@ -351,20 +350,70 @@ function bindInteractions() {
     const counter = flashcardStage.querySelector("[data-flashcard-count]");
     if (cards.length) {
       let current = 0;
-      const showCard = (index) => {
-        current = (index + cards.length) % cards.length;
+      let animating = false;
+      const showCard = (index, direction = 1) => {
+        if (animating || cards.length < 2) return;
+        const previous = current;
+        const next = (index + cards.length) % cards.length;
+        if (next === previous) return;
+        const outgoing = cards[previous];
+        const incoming = cards[next];
+        const outgoingTransform = getComputedStyle(outgoing).transform;
+        const outgoingOpacity = getComputedStyle(outgoing).opacity;
+        const incomingTransform = getComputedStyle(incoming).transform;
+        const incomingOpacity = getComputedStyle(incoming).opacity;
+        current = next;
         cards.forEach((card, cardIndex) => {
           const distance = (cardIndex - current + cards.length) % cards.length;
           const position = distance === 0 ? "front" : distance === 1 ? "back-one" : "back-two";
           card.classList.remove("deck-front", "deck-back-one", "deck-back-two");
           card.classList.add("deck-" + position);
           card.inert = distance !== 0;
+          card.tabIndex = distance === 0 ? 0 : -1;
           card.setAttribute("aria-hidden", String(distance !== 0));
         });
         counter.textContent = String(current + 1).padStart(2, "0") + " / " + String(cards.length).padStart(2, "0");
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        animating = true;
+        outgoing.style.zIndex = "5";
+        incoming.style.zIndex = "4";
+        const exitX = direction >= 0 ? "-112%" : "112%";
+        const outgoingAnimation = outgoing.animate([
+          { transform: outgoingTransform, opacity: outgoingOpacity },
+          { transform: "translate3d(" + exitX + ", -10px, 0) rotate(" + (direction >= 0 ? "-11deg" : "11deg") + ") rotateY(" + (direction >= 0 ? "-14deg" : "14deg") + ") scale(.9)", opacity: 0 }
+        ], { duration: 520, easing: "cubic-bezier(.2,.76,.22,1)", fill: "forwards" });
+        const incomingAnimation = incoming.animate([
+          { transform: incomingTransform + " rotateY(" + (direction >= 0 ? "-12deg" : "12deg") + ")", opacity: incomingOpacity },
+          { transform: "translateY(0) rotate(-.4deg) scale(1) rotateY(0deg)", opacity: 1 }
+        ], { duration: 520, easing: "cubic-bezier(.2,.76,.22,1)", fill: "forwards" });
+        let finished = 0;
+        const finishMotion = () => {
+          finished += 1;
+          if (finished < 2) return;
+          outgoingAnimation.cancel();
+          incomingAnimation.cancel();
+          outgoing.style.zIndex = "";
+          incoming.style.zIndex = "";
+          animating = false;
+        };
+        outgoingAnimation.onfinish = finishMotion;
+        incomingAnimation.onfinish = finishMotion;
       };
       flashcardStage.querySelectorAll("[data-flashcard-move]").forEach((button) => {
-        button.addEventListener("click", () => showCard(current + Number(button.dataset.flashcardMove)));
+        button.addEventListener("click", () => showCard(current + Number(button.dataset.flashcardMove), Number(button.dataset.flashcardMove)));
+      });
+      cards.forEach((card) => {
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button, input, select, textarea")) return;
+          if (!card.inert) showCard(current + 1, 1);
+        });
+        card.addEventListener("keydown", (event) => {
+          if (card.inert || event.target.closest("a, button, input, select, textarea")) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            showCard(current + 1, 1);
+          }
+        });
       });
       showCard(0);
     }
