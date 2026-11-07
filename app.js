@@ -118,7 +118,7 @@ function laptopArt() {
     '<div class="float-control why-control"><button class="float-chip code" type="button" data-float-toggle aria-label="Build with student teams" aria-expanded="false" aria-describedby="why-code-note">&lt;/&gt;</button><span class="why-note" id="why-code-note" role="tooltip"><strong>Why CampusCode? Build with peers.</strong><small>Find teammates, share ideas, and turn a campus challenge into a working project.</small></span></div>' +
     '<div class="float-control calendar-control"><button class="float-chip calendar" type="button" data-float-toggle aria-label="Find your next hackathon" aria-expanded="false" aria-describedby="why-calendar-note">' + icon("calendar") + '</button><span class="why-note" id="why-calendar-note" role="tooltip"><strong>Why CampusCode? Find a challenge.</strong><small>Explore student-led events, dates, and challenges in one place.</small></span></div>' +
     '<div class="float-control trophy-control"><button class="float-chip trophy" type="button" data-float-toggle aria-label="Compete and get recognized" aria-expanded="false" aria-describedby="why-trophy-note">' + icon("trophy") + '</button><span class="why-note" id="why-trophy-note" role="tooltip"><strong>Why CampusCode? Show what you built.</strong><small>Submit your work, follow results, and collect verified certificates.</small></span></div>' +
-    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag in any direction or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home"><div class="laptop-screen"><div class="screen-content laptop-gif-frame"><div class="laptop-animation-player" data-gif-player data-duration-ms="11700"><div class="laptop-gif-sprite" role="img" aria-label="CampusCode: Build, Compete, Ship"></div><div class="laptop-video-controls" role="group" aria-label="Animation controls"><button type="button" class="gif-control" data-gif-play aria-label="Pause animation" aria-pressed="true">' + icon("pause") + '</button><button type="button" class="gif-control gif-stop" data-gif-stop aria-label="Stop and return to the beginning">■</button><input type="range" class="gif-seek" data-gif-seek min="0" max="100" step="1" value="0" aria-label="Animation progress" aria-valuetext="0 percent"><span class="gif-time" data-gif-time>0:00 / 0:12</span><button type="button" class="gif-control gif-fullscreen" data-gif-fullscreen aria-label="View animation fullscreen">⛶</button></div></div></div></div><div class="laptop-base"></div></div>' +
+    '<div class="laptop" data-laptop-rotator tabindex="0" role="group" aria-label="Interactive laptop. Drag in any direction or use the arrow keys to rotate. Press Home to reset." aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home"><div class="laptop-screen"><div class="screen-content laptop-gif-frame"><div class="laptop-animation-player" data-gif-player data-duration-ms="11700" data-frame-count="9" data-frame-width="553" data-frame-height="308"><canvas class="laptop-gif-canvas" width="553" height="308" role="img" aria-label="CampusCode: Build, Compete, Ship"></canvas><div class="laptop-video-controls" role="group" aria-label="Animation controls"><button type="button" class="gif-control" data-gif-play aria-label="Pause animation" aria-pressed="true">' + icon("pause") + '</button><button type="button" class="gif-control gif-stop" data-gif-stop aria-label="Stop and return to the beginning">■</button><input type="range" class="gif-seek" data-gif-seek min="0" max="100" step="1" value="0" aria-label="Animation progress" aria-valuetext="0 percent"><span class="gif-time" data-gif-time>0:00 / 0:12</span><button type="button" class="gif-control gif-fullscreen" data-gif-fullscreen aria-label="View animation fullscreen">⛶</button></div></div></div></div><div class="laptop-base"></div></div>' +
     '<div class="laptop-controls" role="group" aria-label="Laptop 3D rotation controls"><button type="button" data-laptop-axis="y" data-laptop-turn="-8" aria-label="Rotate laptop left">←</button><button type="button" data-laptop-axis="x" data-laptop-turn="-8" aria-label="Tilt laptop up">↑</button><button type="button" data-laptop-axis="z" data-laptop-turn="-8" aria-label="Roll laptop left">↺</button><span>DRAG</span><button type="button" data-laptop-axis="x" data-laptop-turn="8" aria-label="Tilt laptop down">↓</button><button type="button" data-laptop-axis="y" data-laptop-turn="8" aria-label="Rotate laptop right">→</button><button type="button" data-laptop-axis="z" data-laptop-turn="8" aria-label="Roll laptop right">↻</button><button type="button" class="reset-view" data-laptop-reset>Reset</button></div>' +
     '<span class="hero-caption">IDEAS · PEOPLE · PRODUCTS · INNOVATION</span></div>';
 }
@@ -464,62 +464,73 @@ function bindInteractions() {
 
   const gifPlayer = document.querySelector("[data-gif-player]");
   if (gifPlayer) {
-    const sprite = gifPlayer.querySelector(".laptop-gif-sprite");
+    const canvas = gifPlayer.querySelector(".laptop-gif-canvas");
+    const context = canvas.getContext("2d");
     const playButton = gifPlayer.querySelector("[data-gif-play]");
     const stopButton = gifPlayer.querySelector("[data-gif-stop]");
     const seek = gifPlayer.querySelector("[data-gif-seek]");
     const time = gifPlayer.querySelector("[data-gif-time]");
     const fullscreenButton = gifPlayer.querySelector("[data-gif-fullscreen]");
     const duration = Number(gifPlayer.dataset.durationMs) || 11700;
+    const frameCount = Number(gifPlayer.dataset.frameCount) || 9;
+    const frameWidth = Number(gifPlayer.dataset.frameWidth) || canvas.width;
+    const frameHeight = Number(gifPlayer.dataset.frameHeight) || canvas.height;
+    const frameDuration = duration / frameCount;
+    const frames = new Image();
+    frames.src = "./assets/campuscode-screen-frames.jpg";
+    let positionMs = 0;
+    let startedAt = 0;
     let progressFrame = 0;
-    const getAnimation = () => sprite.getAnimations().find((animation) => animation.animationName === "laptop-gif-play") || sprite.getAnimations()[0];
-    const setTime = (milliseconds) => {
-      const cycleTime = Math.max(0, milliseconds) % duration;
-      seek.value = String(Math.round(cycleTime / duration * 100));
-      seek.setAttribute("aria-valuetext", Math.round(cycleTime / duration * 100) + " percent of animation");
-      time.textContent = "0:" + String(Math.floor(cycleTime / 1000)).padStart(2, "0") + " / 0:12";
+    let isPlaying = false;
+    const currentPosition = () => isPlaying ? (positionMs + performance.now() - startedAt) % duration : positionMs;
+    const drawFrame = (milliseconds) => {
+      const safeTime = Math.min(duration, Math.max(0, milliseconds));
+      const frameIndex = Math.min(frameCount - 1, Math.floor(safeTime / frameDuration));
+      if (frames.complete && frames.naturalWidth >= frameWidth * frameCount) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(frames, frameIndex * frameWidth, 0, frameWidth, frameHeight, 0, 0, canvas.width, canvas.height);
+      }
+      const percentage = Math.round(safeTime / duration * 100);
+      seek.value = String(percentage);
+      seek.setAttribute("aria-valuetext", percentage + " percent of animation");
+      time.textContent = "0:" + String(Math.floor(safeTime / 1000)).padStart(2, "0") + " / 0:12";
     };
     const updateProgress = () => {
-      const animation = getAnimation();
-      if (!animation) return;
-      setTime(Number(animation.currentTime) || 0);
-      if (animation.playState === "running") progressFrame = requestAnimationFrame(updateProgress);
-      else progressFrame = 0;
+      if (!isPlaying) return;
+      drawFrame(currentPosition());
+      progressFrame = requestAnimationFrame(updateProgress);
     };
     const setPlaying = (playing) => {
-      const animation = getAnimation();
-      if (!animation) return;
       if (playing) {
-        animation.play();
+        if (isPlaying) return;
+        startedAt = performance.now();
+        isPlaying = true;
         playButton.innerHTML = icon("pause");
         playButton.setAttribute("aria-label", "Pause animation");
         playButton.setAttribute("aria-pressed", "true");
         if (!progressFrame) progressFrame = requestAnimationFrame(updateProgress);
       } else {
-        animation.pause();
+        if (isPlaying) positionMs = currentPosition();
+        isPlaying = false;
         if (progressFrame) cancelAnimationFrame(progressFrame);
         progressFrame = 0;
         playButton.innerHTML = icon("play");
         playButton.setAttribute("aria-label", "Play animation");
         playButton.setAttribute("aria-pressed", "false");
-        updateProgress();
+        drawFrame(positionMs);
       }
     };
-    playButton.addEventListener("click", () => setPlaying(getAnimation()?.playState !== "running"));
+    frames.addEventListener("load", () => drawFrame(currentPosition()));
+    playButton.addEventListener("click", () => setPlaying(!isPlaying));
     stopButton.addEventListener("click", () => {
-      const animation = getAnimation();
-      if (animation) {
-        animation.pause();
-        animation.currentTime = 0;
-      }
       setPlaying(false);
-      setTime(0);
+      positionMs = 0;
+      drawFrame(0);
     });
     seek.addEventListener("input", () => {
-      const animation = getAnimation();
-      if (!animation) return;
-      animation.currentTime = Number(seek.value) / 100 * duration;
-      if (animation.playState !== "running") setTime(Number(animation.currentTime) || 0);
+      positionMs = Number(seek.value) / 100 * duration;
+      startedAt = performance.now();
+      drawFrame(positionMs);
     });
     fullscreenButton.addEventListener("click", async () => {
       try {
@@ -529,6 +540,7 @@ function bindInteractions() {
         showToast("Fullscreen is not available in this browser.");
       }
     });
+    drawFrame(0);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
     else setPlaying(true);
   }
