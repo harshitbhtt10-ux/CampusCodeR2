@@ -19,7 +19,7 @@ The project uses mock data only. It does not connect to a backend, create real a
 
 ## Brand asset
 
-The supplied four-screen reference image is kept in assets/design-reference.png. The header wordmark is displayed from the exact logo pixels visible in that reference image. Replace it with the original campuscode-logo.png asset if the organizer supplies it separately.
+The header wordmark and decorative slash marks use a pixel crop from the supplied four-screen reference image, stored as assets/brand-crop.png. The attached PDF did not contain an embedded logo file and no separate campuscode-logo.png was present in the workspace. The crop preserves the logo pixels shown in the user's reference; replace it with the original logo asset if the organizer supplies it.
 
 ## Design direction
 
