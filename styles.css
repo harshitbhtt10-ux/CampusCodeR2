@@ -177,7 +177,17 @@ svg { display: block; }
   border-radius: 5px;
 }
 .screen-content.laptop-gif-frame { display: block; overflow: hidden; padding: 0; background: #f4f0ff; }
-.laptop-screen-gif { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.laptop-animation-player { position: relative; width: 100%; height: 100%; overflow: hidden; background: #f4f0ff; border-radius: 5px; }
+.laptop-gif-sprite {
+  position: absolute;
+  inset: 0;
+  background-image: url("./assets/campuscode-screen-frames.jpg");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 900% 100%;
+  animation: laptop-gif-play var(--laptop-gif-duration, 11.7s) steps(9, end) infinite;
+  will-change: background-position;
+}
 .screen-top { display: flex; align-items: center; justify-content: space-between; }
 .screen-dots { display: flex; gap: 4px; }
 .screen-dots i { width: 6px; height: 6px; background: #c8c2e3; border-radius: 50%; }
@@ -572,7 +582,7 @@ svg { display: block; }
 .laptop-controls .reset-view { width: auto; padding: 0 7px; color: #514d63; background: transparent; border-radius: 999px; font-size: 9px; font-weight: 700; }
 .laptop-controls .reset-view:hover { color: var(--purple-dark); background: #f2efff; }
 .laptop-controls button:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
-.laptop.dragging .preview-player, .laptop.dragging .preview-play { pointer-events: none; }
+.laptop.dragging .laptop-animation-player { pointer-events: none; }
 .hero-caption { right: auto; bottom: 1%; left: 1%; max-width: 125px; font-size: 8px; line-height: 1.4; }
 .float-control {
   position: absolute;
@@ -634,39 +644,61 @@ svg { display: block; }
   to { opacity: .72; transform: scale(1.08); }
 }
 
-/* A lightweight playable preview gives the laptop screen its own motion. */
-.preview-player {
-  position: relative;
-  min-height: 0;
-  flex: 1;
-  overflow: hidden;
-  margin-top: 8px;
+/* Playback controls remain inside the laptop display. */
+.laptop-video-controls {
+  position: absolute;
+  z-index: 2;
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
+  display: flex;
+  min-height: 23px;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px;
   color: #fff;
-  background: #211b48;
-  border: 1px solid rgba(255,255,255,.55);
-  border-radius: 8px;
-  box-shadow: inset 0 0 20px rgba(21,15,67,.26);
+  background: rgba(18,15,35,.82);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 6px;
+  opacity: .82;
+  transition: opacity .18s ease;
 }
-.preview-scene, .preview-overlay { position: absolute; inset: 0; }
-.preview-scene { overflow: hidden; background: radial-gradient(circle at 72% 27%, rgba(168,230,46,.7), transparent 20%), linear-gradient(135deg,#241c5a,#6d56e6 56%,#a58cff); }
-.scene-slash { position: absolute; top: -25%; left: 44%; width: 21px; height: 160%; background: var(--lime); border-radius: 20px; transform: rotate(37deg); opacity: .9; }
-.scene-window { position: absolute; right: 13%; bottom: 18%; width: 38%; height: 42%; border: 1px solid rgba(255,255,255,.7); border-radius: 8px; background: linear-gradient(145deg,rgba(255,255,255,.3),rgba(255,255,255,.05)); box-shadow: 0 9px 20px rgba(13,9,45,.2); transform: skewY(-8deg); }
-.scene-caption { position: absolute; left: 11%; bottom: 20%; font-family: "DM Mono",monospace; font-size: 7px; letter-spacing: .08em; }
-.preview-overlay { z-index: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; background: linear-gradient(0deg,rgba(19,14,50,.58),rgba(19,14,50,.12)); text-align: center; }
-.preview-brand { position: absolute; top: 9px; left: 10px; color: rgba(255,255,255,.78); font-family: "DM Mono",monospace; font-size: 6px; letter-spacing: .1em; }
-.preview-play { display: grid; width: 35px; height: 35px; margin-bottom: 1px; color: #fff; background: var(--purple); border: 1px solid rgba(255,255,255,.65); border-radius: 50%; box-shadow: 0 5px 14px rgba(15,10,49,.3); cursor: pointer; place-items: center; transition: transform .18s ease, background .18s ease; }
-.preview-play:hover { color: #fff; background: var(--purple-dark); transform: scale(1.08); }
-.preview-play svg { width: 15px; height: 15px; }
-.preview-play svg path { fill: currentColor; stroke-width: 1; }
-.preview-overlay strong { color: #fff; font-size: 10px; }
-.preview-overlay small { color: rgba(255,255,255,.8); font-size: 7px; }
-.preview-controls { position: absolute; z-index: 2; right: 8px; bottom: 7px; left: 8px; display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,.86); font-family: "DM Mono",monospace; font-size: 6px; }
-.preview-track { height: 3px; flex: 1; overflow: hidden; background: rgba(255,255,255,.35); border-radius: 5px; }
-.preview-track i { display: block; width: 0; height: 100%; background: var(--lime); transition: width .35s linear; }
-.preview-player.is-playing .scene-slash { animation: scene-drift 4s ease-in-out infinite alternate; }
-.preview-player.is-playing .scene-window { animation: scene-lift 2.4s ease-in-out infinite alternate; }
-@keyframes scene-drift { to { left: 62%; transform: rotate(53deg); } }
-@keyframes scene-lift { to { bottom: 30%; transform: skewY(-8deg) translateY(-7px); } }
+.laptop-animation-player:hover .laptop-video-controls, .laptop-animation-player:focus-within .laptop-video-controls { opacity: 1; }
+.gif-control {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  padding: 0;
+  color: #fff;
+  background: rgba(255,255,255,.12);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 9px;
+  line-height: 1;
+  place-items: center;
+}
+.gif-control:hover { color: var(--lime); background: rgba(255,255,255,.2); }
+.gif-control svg { width: 11px; height: 11px; }
+.gif-seek { min-width: 25px; height: 4px; flex: 1; margin: 0 2px; accent-color: var(--lime); cursor: pointer; }
+.gif-time { flex: 0 0 auto; color: rgba(255,255,255,.86); font-family: "DM Mono",monospace; font-size: 6px; white-space: nowrap; }
+.gif-control:focus-visible, .gif-seek:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.laptop-animation-player:fullscreen {
+  width: min(90vw, 1100px);
+  height: auto;
+  max-height: 90vh;
+  aspect-ratio: 553 / 308;
+  margin: auto;
+  background: #f4f0ff;
+  border-radius: 12px;
+}
+.laptop-animation-player:fullscreen .laptop-video-controls { right: 12px; bottom: 12px; left: 12px; min-height: 42px; gap: 8px; padding: 5px 10px; }
+.laptop-animation-player:fullscreen .gif-control { width: 32px; height: 32px; flex-basis: 32px; font-size: 15px; }
+.laptop-animation-player:fullscreen .gif-control svg { width: 17px; height: 17px; }
+.laptop-animation-player:fullscreen .gif-seek { height: 6px; }
+.laptop-animation-player:fullscreen .gif-time { font-size: 11px; }
+@keyframes laptop-gif-play { to { background-position: 100% 0; } }
 
 .upcoming-title-wrap { position: relative; }
 .upcoming-trigger { padding: 0; color: inherit; background: transparent; border: 0; font: inherit; cursor: pointer; }
@@ -750,7 +782,7 @@ svg { display: block; }
 
 /* Give text a consistent active color cue across all four routes. */
 body :is(h1,h2,h3,p,small,strong,label,li,a,button):hover { color: var(--purple-dark); }
-body :is(.btn-primary,.preview-play):hover, body :is(.btn-primary,.preview-play):hover * { color: #fff; }
+.btn-primary:hover, .btn-primary:hover * { color: #fff; }
 body .btn-lime:hover, body .btn-lime:hover * { color: var(--ink); }
 .highlight:hover { color: var(--purple-dark); }
 
@@ -859,5 +891,6 @@ body::after { display: none !important; }
     transition: none !important;
     transform: none !important;
   }
+  .laptop-gif-sprite { animation-duration: 11.7s !important; animation-play-state: paused; }
 }
 
