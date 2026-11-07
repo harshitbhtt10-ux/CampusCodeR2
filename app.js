@@ -143,12 +143,7 @@ function renderHome(section) {
     '<main><section class="hero-wrap"><div class="hero-copy"><span class="eyebrow"><span>ReBuild ’26</span><span class="dot"></span><span>Nov 6 – 7</span></span>' +
     '<h1>Discover Hackathons.<br>Build Projects.<br>Compete. <span class="highlight">Ship.</span></h1>' +
     '<div class="hero-actions"><a class="btn btn-primary" href="#/home/events">Explore Hackathons ' + icon("arrow") + '</a><a class="btn btn-outline" href="#/register">Join CampusCode</a></div></div>' +
-    laptopArt() + '</section><section class="feature-row" aria-label="CampusCode features">' +
-    feature("calendar", "Find Hackathons", "Explore campus & national events") +
-    feature("users", "Build & Submit", "Turn your ideas into projects") +
-    feature("grid", "Compete", "Track rounds & results") +
-    feature("certificate", "Get Certified", "Verifiable certificates & ID") +
-    '</section><section class="section-block flashcard-section" id="upcoming-hackathons"><div class="flashcard-intro"><span class="flashcard-eyebrow">YOUR NEXT BUILD STARTS HERE</span><h2>Upcoming<br>Hackathons</h2><p>Three student challenges. Pick one, bring your ideas, and build something worth sharing.</p><a class="text-link" href="#/home/events">View all events ' + icon("arrow") + '</a></div>' +
+    laptopArt() + '</section><section class="section-block flashcard-section" id="upcoming-hackathons"><div class="flashcard-intro"><span class="flashcard-eyebrow">YOUR NEXT BUILD STARTS HERE</span><h2>Upcoming<br>Hackathons</h2><p>Three student challenges. Pick one, bring your ideas, and build something worth sharing.</p><a class="text-link" href="#/home/events">View all events ' + icon("arrow") + '</a></div>' +
     '<div class="flashcard-stage" data-flashcard-stage role="region" aria-label="Upcoming hackathons" aria-roledescription="carousel"><div class="flashcard-stack">' + flashcards + '</div>' +
     '<div class="flashcard-controls"><span class="flashcard-counter" data-flashcard-count aria-live="polite">' + (upcomingEvents.length ? '01 / ' + String(upcomingEvents.length).padStart(2, "0") : '00 / 00') + '</span><span class="flashcard-hint">Click a card or use arrows to flip</span><div class="flashcard-arrows"><button type="button" data-flashcard-move="-1" aria-label="Previous hackathon">' + icon("arrow") + '</button><button type="button" data-flashcard-move="1" aria-label="Next hackathon">' + icon("arrow") + '</button></div></div></div></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP · CHENNAI, INDIA</span></footer></div>';
