@@ -124,15 +124,14 @@ function hackathonFlashcard(event, index, total) {
 function communitySection() {
   return '<section class="landing-section community-section" id="community" aria-labelledby="community-heading">' +
     '<div class="section-kicker">CAMPUSCODE COMMUNITY / 01</div><div class="community-heading-row"><div><h2 id="community-heading">Good ideas find<br><span class="highlight">their people.</span></h2><p>Make space for the conversations, collaboration, and small wins that turn a campus idea into a project.</p></div><span class="community-stamp">OPEN<br>BY DESIGN</span></div>' +
-    '<div class="community-layout"><div class="community-orbit" role="img" aria-label="Ideas connect builders, teams, and campuses">' +
-    '<span class="orbit-ring ring-one"></span><span class="orbit-ring ring-two"></span><span class="orbit-ring ring-three"></span>' +
-    '<div class="orbit-core"><small>START WITH</small><strong>AN IDEA</strong><span class="orbit-core-mark">///</span></div>' +
-    '<span class="orbit-node orbit-node-one"><i>01</i>BUILDERS</span><span class="orbit-node orbit-node-two"><i>02</i>TEAMS</span><span class="orbit-node orbit-node-three"><i>03</i>CAMPUSES</span></div>' +
-    '<div class="community-explorer"><div class="community-choices" role="group" aria-label="Explore the CampusCode community">' +
-    '<button class="community-choice active" type="button" data-community-mode="collaborate" aria-pressed="true"><span>01</span>Find your crew' + icon("arrow") + '</button>' +
-    '<button class="community-choice" type="button" data-community-mode="share" aria-pressed="false"><span>02</span>Share the progress' + icon("arrow") + '</button>' +
-    '<button class="community-choice" type="button" data-community-mode="ship" aria-pressed="false"><span>03</span>Celebrate the ship' + icon("arrow") + '</button></div>' +
-    '<article class="community-message" aria-live="polite"><span class="community-message-kicker" data-community-kicker>WORK BETTER, TOGETHER</span><h3 data-community-title>Meet the people behind your next good idea.</h3><p data-community-copy>Find collaborators, share what you are learning, and build with students who are ready to make something real.</p><a class="text-link" href="#/register">Join the community ' + icon("arrow") + '</a></article></div></div></section>';
+    '<div class="community-layout"><div class="community-orbit" role="group" aria-label="Choose Builders, Teams, or Campuses to learn more">' +
+    '<span class="orbit-ring ring-one" aria-hidden="true"></span><span class="orbit-ring ring-two" aria-hidden="true"></span><span class="orbit-ring ring-three" aria-hidden="true"></span>' +
+    '<div class="orbit-core"><small data-community-core-label>START WITH</small><strong data-community-core>AN IDEA</strong><span class="orbit-core-mark">///</span></div>' +
+    '<button class="orbit-node orbit-node-one" type="button" data-community-mode="builders" aria-pressed="false" aria-controls="community-answer"><i>01</i><span>BUILDERS</span></button>' +
+    '<button class="orbit-node orbit-node-two" type="button" data-community-mode="teams" aria-pressed="false" aria-controls="community-answer"><i>02</i><span>TEAMS</span></button>' +
+    '<button class="orbit-node orbit-node-three" type="button" data-community-mode="campuses" aria-pressed="false" aria-controls="community-answer"><i>03</i><span>CAMPUSES</span></button></div>' +
+    '<div class="community-answer-wrap"><div class="community-prompt" data-community-prompt><span>SELECT A NODE TO EXPLORE</span><h3>Choose your place in the build.</h3><p>Tap Builders, Teams, or Campuses to see how each one fits.</p></div>' +
+    '<article class="community-message" id="community-answer" data-community-answer aria-live="polite" hidden><span class="community-message-kicker" data-community-kicker></span><h3 data-community-title></h3><p data-community-copy></p><a class="text-link" href="#/register">Join the community ' + icon("arrow") + '</a></article></div></div></section>';
 }
 
 function aboutSection() {
@@ -423,37 +422,47 @@ function bindInteractions() {
   }
 
   const communityContent = {
-    collaborate: {
-      kicker: "WORK BETTER, TOGETHER",
-      title: "Meet the people behind your next good idea.",
-      copy: "Find collaborators, share what you are learning, and build with students who are ready to make something real."
+    builders: {
+      kicker: "BUILDERS / THE MAKERS",
+      core: "BUILDERS",
+      title: "Bring your curiosity and make it real.",
+      copy: "Builders are the people who turn a question into a first sketch, a prototype, and a project worth sharing. Start with what you know; grow by making it with others."
     },
-    share: {
-      kicker: "MAKE THE PROCESS VISIBLE",
-      title: "Let the small wins move the work forward.",
-      copy: "Share progress, exchange feedback, and keep your team connected from the first sketch to the final demo."
+    teams: {
+      kicker: "TEAMS / THE COLLABORATORS",
+      core: "TEAMS",
+      title: "Different strengths. One shared build.",
+      copy: "Teams bring designers, developers, and problem-solvers around one challenge. Share the work, test ideas early, and get from first draft to final demo together."
     },
-    ship: {
-      kicker: "CELEBRATE WHAT YOU SHIP",
-      title: "Give your finished work a place to land.",
-      copy: "Bring your project together, submit it to a challenge, and make the result part of your builder story."
+    campuses: {
+      kicker: "CAMPUSES / THE COMMUNITY",
+      core: "CAMPUSES",
+      title: "Start local. Let good work travel.",
+      copy: "Campuses give ideas a place to begin: student challenges, nearby collaborators, and a community ready to see what you make. Share your project beyond your own team."
     }
   };
   document.querySelectorAll("[data-community-mode]").forEach((button) => {
     button.addEventListener("click", () => {
       const mode = communityContent[button.dataset.communityMode];
       if (!mode) return;
+      const answer = document.querySelector("[data-community-answer]");
+      const prompt = document.querySelector("[data-community-prompt]");
+      if (!answer || !prompt) return;
       document.querySelectorAll("[data-community-mode]").forEach((choice) => {
         const active = choice === button;
         choice.classList.toggle("active", active);
         choice.setAttribute("aria-pressed", String(active));
       });
+      document.querySelector("[data-community-core-label]").textContent = "EXPLORE";
+      document.querySelector("[data-community-core]").textContent = mode.core;
       document.querySelector("[data-community-kicker]").textContent = mode.kicker;
       document.querySelector("[data-community-title]").textContent = mode.title;
       document.querySelector("[data-community-copy]").textContent = mode.copy;
-      document.querySelectorAll(".orbit-node").forEach((node, index) => {
-        node.classList.toggle("is-active", index === ["collaborate", "share", "ship"].indexOf(button.dataset.communityMode));
-      });
+      prompt.hidden = true;
+      answer.hidden = false;
+      answer.classList.remove("answer-enter");
+      void answer.offsetWidth;
+      answer.classList.add("answer-enter");
     });
   });
 
