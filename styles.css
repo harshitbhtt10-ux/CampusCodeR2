@@ -1204,8 +1204,15 @@ body::after { display: none !important; }
 .auth-art-award { top: 45px; right: 9%; width: 136px; height: 146px; justify-items: center; gap: 11px; color: var(--purple); border-radius: 25px; transform: rotate(8deg); animation: auth-float-b 5.8s ease-in-out .3s infinite; }
 .auth-art-award svg { width: 54px; height: 54px; stroke-width: 1.6; }
 .auth-art-award span { color: #666176; font-family: "DM Mono",monospace; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
-.auth-art-community { bottom: -2px; left: 42%; display: grid; width: 88px; height: 82px; color: #fff; background: linear-gradient(145deg,#aa7bff,#6848f2); border: 5px solid rgba(255,255,255,.68); border-radius: 25px; box-shadow: 0 15px 26px rgba(82,62,189,.24); place-items: center; transform: rotate(8deg); animation: auth-float-a 4.5s ease-in-out .6s infinite; }
+.auth-art-trigger { position: absolute; z-index: 5; bottom: -2px; left: 42%; }
+.auth-art-community { position: relative; bottom: auto; left: auto; display: grid; width: 88px; height: 82px; padding: 0; color: #fff; background: linear-gradient(145deg,#aa7bff,#6848f2); border: 5px solid rgba(255,255,255,.68); border-radius: 25px; box-shadow: 0 15px 26px rgba(82,62,189,.24); cursor: pointer; appearance: none; place-items: center; transform: rotate(8deg); animation: auth-float-a 4.5s ease-in-out .6s infinite; }
 .auth-art-community svg { width: 39px; height: 39px; }
+.auth-art-community:hover { box-shadow: 0 19px 32px rgba(82,62,189,.32); filter: brightness(1.06); }
+.auth-art-benefits { position: absolute; z-index: 8; bottom: calc(100% + 10px); left: -86px; display: grid; width: 286px; gap: 8px; padding: 15px 17px; color: #1d1b26; background: rgba(255,255,255,.96); border: 1px solid rgba(118,101,255,.23); border-radius: 17px; box-shadow: 0 16px 35px rgba(57,45,133,.17); opacity: 0; pointer-events: none; visibility: hidden; transform: translateY(7px) scale(.98); transform-origin: 60% 100%; transition: opacity .18s ease,transform .18s ease,visibility .18s ease; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.auth-art-benefits strong { margin-bottom: 1px; font-size: 13px; }
+.auth-art-benefits span { color: #494653; font-size: 11px; font-weight: 650; }
+.auth-art-trigger:hover .auth-art-benefits,.auth-art-trigger:focus-within .auth-art-benefits,.auth-register-art.open .auth-art-benefits { opacity: 1; pointer-events: auto; visibility: visible; transform: translateY(0) scale(1); }
+.auth-art-trigger:focus-within .auth-art-community { outline: 3px solid rgba(118,101,255,.3); outline-offset: 3px; }
 .auth-art-spark { position: absolute; z-index: 1; color: var(--purple); font-size: 33px; line-height: 1; animation: auth-spark 2.7s ease-in-out infinite; }
 .spark-purple { top: 6px; right: 23%; }
 .spark-lime { top: 0; right: 3%; color: var(--lime); }
@@ -1332,8 +1339,11 @@ body::after { display: none !important; }
   .auth-art-project { top: 13px; left: 8%; width: 185px; height: 125px; }
   .auth-art-award { top: 35px; right: 5%; width: 105px; height: 116px; }
   .auth-art-award svg { width: 42px; height: 42px; }
-  .auth-art-community { left: 40%; width: 69px; height: 66px; border-radius: 20px; }
+  .auth-art-trigger { left: 40%; }
+  .auth-art-community { width: 69px; height: 66px; border-radius: 20px; }
   .auth-art-community svg { width: 31px; height: 31px; }
+  .auth-art-benefits { left: 50%; width: min(278px,calc(100vw - 52px)); transform: translate(-50%,7px) scale(.98); transform-origin: 50% 100%; }
+  .auth-art-trigger:hover .auth-art-benefits,.auth-art-trigger:focus-within .auth-art-benefits,.auth-register-art.open .auth-art-benefits { transform: translate(-50%,0) scale(1); }
   .auth-login-art { height: 200px; margin-top: 10px; }
   .auth-login-art .campus-art { height: 180px; }
   .auth-login-mark { top: 8px; left: 52%; width: 82px; height: 76px; border-radius: 19px; }
@@ -1363,3 +1373,4 @@ body::after { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .auth-story,.auth-card,.auth-art-project,.auth-art-award,.auth-art-community,.auth-art-spark { animation: none !important; }
 }
+.auth-art-community:hover,.auth-art-community:hover * { color: #fff; }
