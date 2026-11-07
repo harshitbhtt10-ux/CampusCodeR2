@@ -1374,3 +1374,30 @@ body::after { display: none !important; }
   .auth-story,.auth-card,.auth-art-project,.auth-art-award,.auth-art-community,.auth-art-spark { animation: none !important; }
 }
 .auth-art-community:hover,.auth-art-community:hover * { color: #fff; }
+
+/* Keep the login composition in view and give the card mark its three distinct brand bars. */
+.auth-story-login .auth-story-copy h1 { font-size: clamp(38px,4.35vw,56px); letter-spacing: -3px; }
+.auth-card-frame-login { width: min(100%,620px); padding: 10px 0 10px 10px; }
+.auth-card-login { padding: 35px clamp(28px,3vw,48px) 28px; background: rgba(255,255,255,.97); }
+.auth-card-login h2 { max-width: calc(100% - 45px); font-size: clamp(26px,2.25vw,33px); }
+.auth-card-brandmark { display: flex; align-items: center; gap: 4px; width: 42px; height: 38px; color: transparent; font-size: 0; letter-spacing: 0; transform: none; }
+.auth-card-brandmark i { display: block; width: 8px; height: 32px; background: #191723; transform: skew(-25deg); }
+.auth-card-brandmark i:nth-child(2) { background: var(--purple); }
+.auth-card-brandmark i:nth-child(3) { background: var(--lime); }
+.auth-card-login .form-field { margin: 13px 0 15px; }
+.auth-card-login .input-wrap input { height: 52px; font-size: 13px; }
+.auth-card-login .forgot-row { margin: 0 0 17px; }
+.auth-card-login .form-submit { min-height: 56px; font-size: 17px; }
+.auth-card-login .divider { margin: 17px 0; }
+.auth-card-login .social-btn { min-height: 49px; }
+.auth-card-login .form-foot { margin-top: 18px; }
+@media (max-width: 760px) {
+  .auth-story-login .auth-story-copy h1 { font-size: clamp(39px,7.6vw,54px); }
+  .auth-card-frame-login { width: 100%; }
+}
+@media (max-width: 480px) {
+  .auth-story-login .auth-story-copy h1 { font-size: clamp(35px,9.3vw,46px); letter-spacing: -2.4px; }
+  .auth-card-login { padding: 29px 20px 24px; }
+  .auth-card-brandmark { top: 21px; right: 22px; width: 35px; height: 31px; gap: 3px; }
+  .auth-card-brandmark i { width: 7px; height: 27px; }
+}
