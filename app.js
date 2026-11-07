@@ -8,6 +8,7 @@ const iconPaths = {
   upload: '<path d="M12 15V3m-4 4 4-4 4 4M4 14v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"/>',
   trophy: '<path d="M8 21h8m-4-4v4m-6-18h12v5a6 6 0 0 1-12 0V3Zm12 2h3v2a4 4 0 0 1-4 4M6 5H3v2a4 4 0 0 0 4 4"/>',
   home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/>',
+  building: '<path d="M4 21V5a2 2 0 0 1 2-2h8v18m0-12h4a2 2 0 0 1 2 2v10M2 21h20M8 7h2m-2 4h2m-2 4h2m6 0h2m-2 4h2"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3m-4 4v3"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
   eye: '<path d="M2.5 12s3.2-6 9.5-6 9.5 6 9.5 6-3.2 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/>',
@@ -183,23 +184,20 @@ function campusIllustration(interactive = false) {
 
 function authStory(kind) {
   const isRegister = kind === "register";
-  const step = isRegister ? "02" : "01";
-  const eyebrow = isRegister ? "START YOUR BUILD LOOP" : "PICK UP YOUR BUILD LOOP";
-  const heading = isRegister
-    ? 'Make room for<br>your next <span class="highlight">big idea.</span>'
-    : 'Your next build<br>is waiting <span class="highlight">here.</span>';
-  const copy = isRegister
-    ? "Set up your builder profile and start finding challenges, teammates, and reasons to ship."
-    : "Pick up your project, reconnect with your team, and keep moving toward the next ship.";
-  return '<section class="auth-story auth-story-' + kind + '" aria-labelledby="auth-story-heading">' +
-    '<div class="auth-story-meta"><span class="auth-story-index">' + step + ' / 02</span><span class="auth-story-meta-line"></span><span>BUILDER ENTRY</span></div>' +
-    '<div class="auth-story-copy"><span class="eyebrow">' + eyebrow + '</span><h1 id="auth-story-heading">' + heading + '</h1><p>' + copy + '</p></div>' +
-    '<div class="auth-build-stage" aria-label="CampusCode build path">' +
-    '<div class="auth-stage-orbit orbit-a" aria-hidden="true"></div><div class="auth-stage-orbit orbit-b" aria-hidden="true"></div>' +
-    '<div class="auth-stage-badge"><span class="auth-stage-signal"></span><span>CAMPUSCODE / BUILD LOOP</span><span class="auth-stage-badge-mark">///</span></div>' +
-    campusIllustration(!isRegister) +
-    '<div class="auth-stage-cards" aria-label="Find, build, and ship"><div class="auth-stage-card"><span>01 / FIND</span><strong>A challenge</strong></div><div class="auth-stage-card"><span>02 / BUILD</span><strong>A team</strong></div><div class="auth-stage-card"><span>03 / SHIP</span><strong>Your work</strong></div></div>' +
-    '</div><div class="auth-story-footer"><span>IDEAS START HERE</span><span class="auth-story-footer-line"></span><span>BUILD · COMPETE · SHIP</span></div></section>';
+  if (isRegister) {
+    return '<section class="auth-story auth-story-register" aria-labelledby="auth-story-heading">' +
+      '<span class="auth-story-pill">Create Account</span>' +
+      '<div class="auth-story-copy"><h1 id="auth-story-heading">Join the<br>CampusCode<br><span class="highlight">Community.</span></h1><p>Be part of a student-first hackathon platform built for builders like you.</p></div>' +
+      '<ul class="auth-benefits"><li><span>✓</span>Join hackathons</li><li><span>✓</span>Submit your projects</li><li><span>✓</span>Track results &amp; get certified</li></ul>' +
+      '<div class="auth-register-art" aria-hidden="true"><span class="auth-art-orbit orbit-one"></span><span class="auth-art-orbit orbit-two"></span><span class="auth-art-spark spark-purple">✦</span><span class="auth-art-spark spark-lime">✦</span>' +
+      '<div class="auth-art-project"><span class="auth-art-code">&lt;/&gt;</span><i></i><i></i><i></i></div>' +
+      '<div class="auth-art-award">' + icon("trophy") + '<span>SHIP IT</span></div><div class="auth-art-community">' + icon("users") + '</div></div></section>';
+  }
+  return '<section class="auth-story auth-story-login" aria-labelledby="auth-story-heading">' +
+    '<span class="auth-story-pill">Welcome Back <span aria-hidden="true">👋</span></span>' +
+    '<div class="auth-story-copy"><h1 id="auth-story-heading">Build.<br>Compete.<br>Ship. Together<br>on <span class="highlight">CampusCode.</span></h1><p>Access your dashboard, manage your events, submit projects and grow with the community.</p></div>' +
+    '<div class="auth-benefit-row"><span><i>' + icon("upload") + '</i><b>Join<br>Hackathons</b></span><span><i>' + icon("grid") + '</i><b>Submit<br>Projects</b></span><span><i>' + icon("calendar") + '</i><b>Track<br>Results</b></span></div>' +
+    '<div class="auth-login-art"><div class="auth-login-mark"><span>///</span></div>' + campusIllustration(true) + '<span class="auth-art-spark spark-lime">✦</span></div></section>';
 }
 
 function field(name, label, placeholder, type, iconName, extra) {
@@ -211,24 +209,27 @@ function field(name, label, placeholder, type, iconName, extra) {
 
 function renderLogin() {
   return '<div class="site-shell">' + header("login") + '<main class="auth-shell">' + authStory("login") +
-    '<section class="auth-card auth-card-login"><div class="auth-card-head"><span class="auth-card-kicker">MEMBER ACCESS / 01</span><span class="auth-card-badge"><i>CC</i> DEMO SPACE</span></div><h2>Welcome back,<br><span class="auth-heading-highlight">builder.</span></h2><p class="card-subtitle">Your projects and next challenges are ready.</p>' +
+    '<div class="auth-card-frame auth-card-frame-login"><span class="auth-card-frame-backdrop" aria-hidden="true"></span><section class="auth-card auth-card-login"><div class="auth-card-brandmark" aria-hidden="true">///</div><h2>Login to your account</h2><p class="card-subtitle">Access your CampusCode dashboard</p><span class="auth-card-underline"></span>' +
     '<form id="login-form" novalidate>' + field("login-id", "CampusCode ID / Email", "Enter your CampusCode ID or email", "text", "mail", ' autocomplete="username"') +
     field("login-password", "Password", "Enter your password", "password", "lock", ' autocomplete="current-password"') +
     '<div class="forgot-row"><button type="button" data-forgot>Forgot password?</button></div>' +
-    '<button class="btn btn-primary form-submit" type="submit">Login ' + icon("arrow") + '</button>' +
-    '<div class="divider">or continue with</div><div class="social-row"><button class="social-btn" type="button" data-social="Google">🌐 &nbsp; Continue with Google</button><button class="social-btn" type="button" data-social="GitHub">◉ &nbsp; Continue with GitHub</button></div>' +
-    '<p class="form-foot">Don’t have an account? <a href="#/register">Register now</a></p></form></section></main>' +
+    '<button class="btn btn-primary form-submit" type="submit"><span>Login</span>' + icon("arrow") + '</button>' +
+    '<div class="divider">or continue with</div><div class="social-row"><button class="social-btn google-btn" type="button" data-social="Google"><span class="google-g">G</span> Continue with Google</button></div>' +
+    '<p class="form-foot">Don’t have an account? <a href="#/register">Register</a></p></form></section></div></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP</span></footer></div>';
 }
 
 function renderRegister() {
   return '<div class="site-shell">' + header("register") + '<main class="auth-shell register">' + authStory("register") +
-    '<section class="auth-card auth-card-register"><div class="auth-card-head"><span class="auth-card-kicker">NEW BUILDER / 02</span><span class="auth-card-badge"><i>CC</i> START HERE</span></div><h2>Create your<br><span class="auth-heading-highlight">builder profile.</span></h2><p class="card-subtitle">One profile for challenges, teams, and project updates.</p>' +
-    '<form id="register-form" novalidate>' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"') +
-    field("register-email", "Email", "Enter your email", "email", "mail", ' autocomplete="email"') +
+    '<section class="auth-card auth-card-register"><div class="auth-card-brandmark" aria-hidden="true">///</div><h2>Create your account</h2><p class="card-subtitle">Register and start building today.</p>' +
+    '<ol class="auth-stepper" aria-label="Registration steps"><li class="active" aria-current="step"><i>' + icon("users") + '</i><span>Account Details</span></li><li><i>' + icon("mail") + '</i><span>Verify Email</span></li><li><i>' + icon("trophy") + '</i><span>Start Building</span></li></ol>' +
+    '<form id="register-form" novalidate>' + field("full-name", "Full Name", "Enter your full name", "text", "users", ' autocomplete="name"').replace('<div class="form-field">','<div class="form-field wide">') +
+    field("register-email", "Email", "Enter your college email", "email", "mail", ' autocomplete="email"') +
+    '<div class="form-field"><label for="register-college">College / Institute</label><div class="input-wrap input-select-wrap">' + icon("building", "input-icon") + '<select id="register-college" name="college"><option value="" selected>Select your institute</option><option>CampusCode Community</option><option>Other institute</option></select><span class="select-caret">⌄</span></div></div>' +
     field("register-password", "Password", "Create a password", "password", "lock", ' autocomplete="new-password"') +
+    field("register-confirm-password", "Confirm Password", "Re-enter your password", "password", "lock", ' autocomplete="new-password"') +
     '<label class="terms-row"><input name="terms" type="checkbox"><span>I agree to the <a href="#/terms" data-demo-feature="Terms of Service">Terms of Service</a> and <a href="#/privacy" data-demo-feature="Privacy Policy">Privacy Policy</a></span></label>' +
-    '<button class="btn btn-primary form-submit" type="submit">Register ' + icon("arrow") + '</button><p class="form-foot">Already have an account? <a href="#/login">Login</a></p></form></section></main>' +
+    '<button class="btn btn-primary form-submit" type="submit"><span>Register</span>' + icon("arrow") + '</button><p class="form-foot">Already have an account? <a href="#/login">Login</a></p></form></section></main>' +
     '<footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP</span></footer></div>';
 }
 
