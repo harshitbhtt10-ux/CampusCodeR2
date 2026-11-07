@@ -843,3 +843,92 @@ body .btn-lime:hover, body .btn-lime:hover * { color: var(--ink); }
   body, body::before, body::after, .hero-glow, .laptop { animation: none !important; }
 }
 
+/* CampusCode's reference background: blueprint grid, pale lime/lilac light, and dotted paths. */
+body {
+  background-color: #f7f7f4;
+  background-image:
+    linear-gradient(rgba(102,105,123,.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102,105,123,.065) 1px, transparent 1px),
+    linear-gradient(rgba(102,105,123,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102,105,123,.035) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  animation: none;
+}
+body::before, body::after {
+  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  transform-origin: center;
+}
+body::before {
+  z-index: 0;
+  background: url("./assets/ambient-paths.svg") center / min(1600px, 140vw) auto no-repeat;
+  opacity: .34;
+  animation: path-drift 38s ease-in-out infinite alternate;
+}
+body::after {
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 27%, rgba(152,128,255,.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 31%, rgba(152,128,255,.42) 0 2px, transparent 3px),
+    radial-gradient(circle at 68% 79%, rgba(152,128,255,.48) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 35% 72%, rgba(168,230,46,.32) 0 2px, transparent 3px);
+  opacity: .62;
+  animation: particle-drift 17s ease-in-out infinite alternate;
+}
+@keyframes path-drift {
+  to { background-position: calc(50% + 12px) calc(50% - 10px); opacity: .42; }
+}
+@keyframes particle-drift {
+  to { transform: translate3d(0,-9px,0); opacity: .4; }
+}
+.site-shell, .dashboard-shell { z-index: 1; }
+.hero-wrap, .auth-shell, .dashboard-main {
+  position: relative;
+  isolation: isolate;
+  background-color: #fbfbf8;
+  background-image:
+    url("./assets/ambient-paths.svg"),
+    linear-gradient(35deg, rgba(234,255,198,.62), rgba(255,255,255,.82) 45%, rgba(232,226,255,.7)),
+    linear-gradient(rgba(102,105,123,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102,105,123,.05) 1px, transparent 1px),
+    linear-gradient(rgba(102,105,123,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102,105,123,.025) 1px, transparent 1px);
+  background-size: cover, auto, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  background-position: center, center, 0 0, 0 0, 0 0, 0 0;
+}
+.hero-wrap::before, .auth-shell::before, .dashboard-main::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 17% 29%, rgba(155,132,255,.48) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 24%, rgba(155,132,255,.37) 0 2px, transparent 3px),
+    radial-gradient(circle at 71% 78%, rgba(155,132,255,.42) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 37% 75%, rgba(168,230,46,.32) 0 2px, transparent 3px);
+  animation: section-particles 15s ease-in-out infinite alternate;
+}
+@keyframes section-particles {
+  to { background-position: 0 -10px, 0 7px, 0 -6px, 0 9px; opacity: .52; }
+}
+.hero-wrap > *, .auth-shell > *, .dashboard-main > * { position: relative; z-index: 1; }
+.hero-copy, .hero-art { z-index: 1; }
+@media (max-width: 760px) {
+  body::before { background-size: 1600px auto; background-position: 54% center; }
+  .hero-wrap, .auth-shell, .dashboard-main { background-size: auto, auto, 20px 20px, 20px 20px, 100px 100px, 100px 100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after, .hero-wrap::before, .auth-shell::before, .dashboard-main::before { animation: none !important; }
+}
+
