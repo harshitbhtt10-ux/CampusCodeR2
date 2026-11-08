@@ -1724,3 +1724,43 @@ body::after { display: none !important; }
   .hero-art-spark { animation: none !important; }
 }
 
+/* Quiet floating motion gives the dashboard illustrations a dimensional feel. */
+.hero-laptop,
+.hero-book-stack,
+.hero-mug,
+.ai-stack,
+.feature-float { will-change: translate, rotate; }
+.hero-laptop { animation: dashboard-laptop-float 6.2s ease-in-out infinite; }
+.hero-book-stack { animation: dashboard-books-float 7.4s ease-in-out .3s infinite; }
+.hero-mug { animation: dashboard-mug-float 5.2s ease-in-out .8s infinite; }
+.ai-stack { animation: dashboard-ai-float 6.8s ease-in-out .25s infinite; }
+.feature-float { animation: dashboard-icon-float 5.6s ease-in-out infinite; }
+.feature-bot { animation-delay: .9s; }
+.feature-bars { animation-delay: 1.6s; }
+.feature-orbit { animation: dashboard-orbit-turn 34s linear infinite; }
+.feature-orbit-two { animation-direction: reverse; animation-duration: 42s; }
+@keyframes dashboard-laptop-float {
+  0%,100% { translate: 0 0; rotate: y -.6deg; }
+  50% { translate: 0 -6px; rotate: y 1.1deg; }
+}
+@keyframes dashboard-books-float {
+  0%,100% { translate: 0 0; rotate: z 0deg; }
+  50% { translate: 0 -4px; rotate: z 1deg; }
+}
+@keyframes dashboard-mug-float {
+  0%,100% { translate: 0 0; rotate: z 0deg; }
+  50% { translate: 0 -5px; rotate: z 2deg; }
+}
+@keyframes dashboard-ai-float {
+  0%,100% { translate: 0 0; rotate: y -.7deg; }
+  50% { translate: 0 -7px; rotate: y 1.2deg; }
+}
+@keyframes dashboard-icon-float {
+  0%,100% { translate: 0 0; rotate: z -2deg; }
+  50% { translate: 0 -6px; rotate: z 2deg; }
+}
+@keyframes dashboard-orbit-turn { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-laptop,.hero-book-stack,.hero-mug,.ai-stack,.feature-float,.feature-orbit { animation: none !important; will-change: auto; }
+}
+
