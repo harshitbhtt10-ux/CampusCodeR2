@@ -8,6 +8,7 @@ const iconPaths = {
   upload: '<path d="M12 15V3m-4 4 4-4 4 4M4 14v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"/>',
   trophy: '<path d="M8 21h8m-4-4v4m-6-18h12v5a6 6 0 0 1-12 0V3Zm12 2h3v2a4 4 0 0 1-4 4M6 5H3v2a4 4 0 0 0 4 4"/>',
   home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/>',
+  code: '<path d="m8 8-4 4 4 4m8-8 4 4-4 4m-2-11-4 14"/>',
   building: '<path d="M4 21V5a2 2 0 0 1 2-2h8v18m0-12h4a2 2 0 0 1 2 2v10M2 21h20M8 7h2m-2 4h2m-2 4h2m6 0h2m-2 4h2"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3m-4 4v3"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
@@ -79,11 +80,11 @@ function header(route, section) {
     return '<header class="dashboard-header">' + brand() +
       '<nav class="dash-top-nav" aria-label="Main navigation">' +
       '<a class="' + (active === "dashboard" ? "active" : "") + '" href="#/dashboard">' + icon("home") + 'Dashboard</a>' +
-      '<a class="' + (active === "hackathons" ? "active" : "") + '" href="#/dashboard/events">' + icon("trophy") + 'Hackathons</a>' +
+      '<a class="' + (active === "hackathons" ? "active" : "") + '" href="#/dashboard/events">' + icon("code") + 'Hackathons</a>' +
       '<a href="#/dashboard/ai-tools" data-demo-feature="AI Tools">' + icon("grid") + 'AI Tools</a>' +
       '<a href="#/dashboard/community" data-demo-feature="Community">' + icon("users") + 'Community</a></nav>' +
       '<div class="dash-tools"><button class="nav-icon" type="button" data-notifications aria-label="Notifications">' + icon("bell") + '<span class="notification-dot"></span></button>' +
-      '<button class="avatar" type="button" data-profile aria-label="Profile menu">' + escapeHTML((readSession().name || "Harshit").slice(0, 1).toUpperCase()) + '</button></div></header>';
+      '<button class="avatar" type="button" data-profile aria-label="Profile menu">' + escapeHTML((readSession().name || "Harshit").slice(0, 1).toUpperCase()) + '</button><span class="dash-profile-caret" aria-hidden="true">⌄</span></div></header>';
   }
   return '<header class="site-header">' + brand() +
     '<nav class="primary-nav" id="primary-nav" aria-label="Main navigation">' +
@@ -255,16 +256,16 @@ function sidebar(section, user) {
   return '<aside class="sidebar"><div class="profile-row"><span class="profile-avatar">' + escapeHTML(user.initials) + '</span><span class="profile-copy"><strong>' + escapeHTML(user.name) + '</strong><small>' + escapeHTML(user.id) + '</small></span></div>' +
     '<nav class="side-nav" aria-label="Dashboard navigation">' + links.map(([key, iconName, label]) =>
       '<a class="' + (section === key ? "active" : "") + '" href="#/dashboard/' + key + '">' + icon(iconName) + label + '</a>'
-    ).join("") + '</nav><div class="side-tagline">BUILD – COMPETE – SHIP</div></aside>';
+    ).join("") + '</nav><div class="side-promo" aria-hidden="true"><span class="side-promo-mark"><i></i><i></i><i></i></span><strong>Build.<br>Compete.<br>Ship.<br><em>Together.</em></strong></div></aside>';
 }
 
 function stats() {
   const joined = events.filter((event) => event.joined).length;
   return '<section class="stat-grid" aria-label="Your activity">' +
-    '<article class="stat-card"><span class="stat-icon">' + icon("calendar") + '</span><span><strong>' + joined + '</strong><small>My Events</small></span></article>' +
-    '<article class="stat-card"><span class="stat-icon">' + icon("trophy") + '</span><span><strong>' + events.filter((event) => !event.joined).length + '</strong><small>Upcoming Events</small></span></article>' +
-    '<article class="stat-card"><span class="stat-icon">' + icon("grid") + '</span><span><strong>1</strong><small>Submissions</small></span></article>' +
-    '<article class="stat-card"><span class="stat-icon lime">' + icon("certificate") + '</span><span><strong>3</strong><small>Certificates</small></span></article></section>';
+    '<article class="stat-card"><span class="stat-icon">' + icon("calendar") + '</span><span class="stat-value"><strong>' + joined + '</strong><small>My Events</small></span><svg class="stat-spark" viewBox="0 0 74 32" aria-hidden="true"><path d="M2 27c12 0 13-16 25-16s9 14 20 14 12-20 25-20"/></svg></article>' +
+    '<article class="stat-card"><span class="stat-icon lime">' + icon("trophy") + '</span><span class="stat-value"><strong>' + events.filter((event) => !event.joined).length + '</strong><small>Upcoming Events</small></span><svg class="stat-spark lime" viewBox="0 0 74 32" aria-hidden="true"><path d="M2 27c12 0 13-16 25-16s9 14 20 14 12-20 25-20"/></svg></article>' +
+    '<article class="stat-card"><span class="stat-icon">' + icon("grid") + '</span><span class="stat-value"><strong>1</strong><small>Submissions</small></span><svg class="stat-spark" viewBox="0 0 74 32" aria-hidden="true"><path d="M2 27c12 0 13-16 25-16s9 14 20 14 12-20 25-20"/></svg></article>' +
+    '<article class="stat-card"><span class="stat-icon lime">' + icon("certificate") + '</span><span class="stat-value"><strong>3</strong><small>Certificates</small></span><svg class="stat-spark lime" viewBox="0 0 74 32" aria-hidden="true"><path d="M2 27c12 0 13-16 25-16s9 14 20 14 12-20 25-20"/></svg></article></section>';
 }
 
 function myEventItem(event) {
@@ -310,13 +311,48 @@ function dashboardSectionContent(section) {
   return '<section class="dash-panel"><div class="dashboard-empty"><span class="empty-icon">✦</span><h2>' + escapeHTML(section.replace(/-/g, " ")) + '</h2><p>This preview keeps the core hackathon flow focused on your events, registrations, and submissions.</p><a class="btn btn-outline btn-small" href="#/dashboard">Back to Dashboard</a></div></section>';
 }
 
+function dashboardDateParts(date) {
+  const monthDay = String(date || "").match(/([A-Za-z]{3})\s+(\d{1,2})/);
+  const year = String(date || "").match(/\b(20\d{2})\b/);
+  return { month: monthDay ? monthDay[1].toUpperCase() : "NOV", day: monthDay ? monthDay[2] : "08", year: year ? year[1] : "2026" };
+}
+
+function dashboardMyEventRow(event) {
+  const date = dashboardDateParts(event.date);
+  return '<article class="dashboard-event-row"><div class="dashboard-event-date"><small>' + date.month + '</small><strong>' + date.day + '</strong><small>' + date.year + '</small></div>' +
+    '<div class="dashboard-event-copy">' + statusPill(event.status) + '<h3>' + escapeHTML(event.name) + '</h3><p>' + escapeHTML(event.description) + '</p></div>' +
+    '<div class="dashboard-event-actions"><button class="btn ' + (event.action === "Submit" ? "btn-primary" : "btn-outline") + ' dashboard-action" type="button" data-event-action="' + event.id + '">' + escapeHTML(event.action === "Submit" ? "Submit" : "View") + (event.action === "Submit" ? ' ' + icon("arrow") : '') + '</button><span class="status-pill status-joined">Registered</span></div></article>';
+}
+
+function dashboardHeroArt() {
+  return '<div class="dash-hero-art" aria-hidden="true"><span class="hero-art-spark spark-one">✦</span><span class="hero-art-spark spark-two">✦</span><div class="hero-book-stack"><i></i><i></i><i></i></div><div class="hero-laptop"><div class="hero-laptop-screen"><span>&lt;/&gt;</span><i></i></div><div class="hero-laptop-base"></div></div><div class="hero-mug"><span>&lt;/&gt;</span></div><span class="hero-art-grid"></span></div>';
+}
+
+function dashboardFeatureArt() {
+  return '<div class="dashboard-feature-art" aria-hidden="true"><span class="feature-orbit"></span><span class="feature-orbit feature-orbit-two"></span><span class="feature-float feature-code">&lt;/&gt;</span><span class="feature-float feature-bot">✿</span><span class="feature-float feature-bars">▥</span><div class="ai-stack"><div class="ai-stack-top">AI</div><i class="ai-stack-mid"></i><i class="ai-stack-bottom"></i></div></div>';
+}
+
+function dashboardOverview(user) {
+  const joined = events.filter((event) => event.joined);
+  const upcoming = events.filter((event) => !event.joined);
+  const today = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date());
+  const feature = upcoming[0];
+  return '<div class="dashboard-overview"><div class="dashboard-overview-top"><section class="dash-welcome-card"><div class="dash-welcome-copy"><h1>Welcome Back, <span>' + escapeHTML(user.name) + '</span> <i aria-hidden="true">👋</i></h1><p>Track your hackathons, submissions and achievements<br class="desktop-break"> all in one place.</p></div>' + dashboardHeroArt() + '</section>' +
+    '<aside class="dash-date-card"><span class="dash-date-icon">' + icon("calendar") + '</span><span class="dash-date-caption">Today</span><strong>' + today + '</strong><span class="dash-date-mark" aria-hidden="true"><i></i><i></i><i></i></span></aside></div>' + stats() +
+    '<div class="dash-panels dash-overview-panels"><section class="dash-panel dash-my-events-panel"><div class="panel-heading"><div class="panel-heading-title">' + icon("calendar") + '<h2>My Events</h2></div><a class="text-link" href="#/dashboard/my-events">View All ' + icon("arrow") + '</a></div>' +
+    (joined.length ? joined.slice(0, 3).map(dashboardMyEventRow).join("") : '<div class="dashboard-empty"><span class="empty-icon">＋</span><h2>No events yet</h2><p>Join an event to see it here.</p><a class="btn btn-primary btn-small" href="#/dashboard/events">Explore Events</a></div>') +
+    '</section><section class="dash-panel dash-feature-panel"><div class="panel-heading"><div class="panel-heading-title">' + icon("trophy") + '<h2>Events</h2></div><a class="text-link" href="#/dashboard/events">View All ' + icon("arrow") + '</a></div>' +
+    (feature ? '<article class="dashboard-feature-event"><div class="dashboard-feature-copy">' + statusPill(feature.status) + '<h3>' + escapeHTML(feature.name) + '</h3><p>' + escapeHTML(feature.description) + '</p><div class="dashboard-feature-meta"><span>' + icon("calendar") + escapeHTML(feature.date) + '</span><span>' + icon("users") + 'Team / Individual</span></div><button class="btn btn-primary dashboard-register" type="button" data-toggle-event="' + feature.id + '">Register ' + icon("arrow") + '</button></div>' + dashboardFeatureArt() + '</article>' : '<div class="dashboard-empty"><span class="empty-icon">✓</span><h2>You’re all caught up</h2><p>Check back soon for the next hackathon.</p></div>') +
+    '</section></div></div>';
+}
+
 function renderDashboard(section) {
   const user = dashboardUser();
   const title = section === "events" ? "Hackathons" : section === "my-events" ? "My Events" : section[0].toUpperCase() + section.slice(1);
+  const isOverview = section === "dashboard" || section === "home";
+  const content = isOverview ? dashboardOverview(user) : '<div class="dash-title-row"><div><h1>' + escapeHTML(title) + '</h1><p>Keep your CampusCode activity moving.</p></div><span class="dash-decoration" aria-hidden="true"><i></i><i></i><i></i></span></div>' + stats() + dashboardSectionContent(section);
   return '<div class="dashboard-shell">' + header("dashboard", section) + '<main class="dashboard-body">' + sidebar(section, user) +
-    '<section class="dashboard-main"><div class="dash-title-row"><div><h1>' + (section === "dashboard" ? 'Welcome Back, ' + escapeHTML(user.name) + ' 👋' : escapeHTML(title)) +
-    '</h1><p>' + (section === "dashboard" ? 'Track your hackathons, submissions and achievements.' : 'Keep your CampusCode activity moving.') + '</p></div><span class="dash-decoration" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
-    stats() + dashboardSectionContent(section) + '</section></main><footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP</span></footer></div>';
+    '<section class="dashboard-main">' + content + '</section></main><footer class="page-footer"><span>© 2026 CAMPUSCODE</span><span>BUILD · COMPETE · SHIP</span></footer></div>';
 }
 
 function routeInfo() {
