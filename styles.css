@@ -1379,7 +1379,8 @@ body::after { display: none !important; }
 .auth-story-login .auth-story-copy h1 { font-size: clamp(38px,4.35vw,56px); letter-spacing: -3px; }
 .auth-card-frame-login { width: min(100%,620px); padding: 10px 0 10px 10px; }
 .auth-card-login { padding: 35px clamp(28px,3vw,48px) 28px; background: rgba(255,255,255,.97); }
-.auth-card-login h2 { max-width: calc(100% - 45px); font-size: clamp(26px,2.25vw,33px); }
+.auth-card-login .auth-card-brandmark { display: none; }
+.auth-card-login h2 { max-width: 100%; font-size: clamp(26px,2.25vw,33px); }
 .auth-card-brandmark { display: flex; align-items: center; gap: 4px; width: 42px; height: 38px; color: transparent; font-size: 0; letter-spacing: 0; transform: none; }
 .auth-card-brandmark i { display: block; width: 8px; height: 32px; background: #191723; transform: skew(-25deg); }
 .auth-card-brandmark i:nth-child(2) { background: var(--purple); }
