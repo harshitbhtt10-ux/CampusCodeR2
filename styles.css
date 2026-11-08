@@ -1717,6 +1717,10 @@ body::after { display: none !important; }
   .hero-laptop { top: -7px; right: 9%; transform: perspective(900px) rotateX(7deg) rotateY(-22deg) rotateZ(-5deg) translateZ(16px) scale(.58); }
   .hero-book-stack { transform: perspective(450px) rotateY(-16deg) rotateX(8deg) rotateZ(-7deg) scale(.72); }
 }
+/* Keep the dashboard's desktop navigation as compact floating pills. */
+.dash-top-nav { align-items: center; }
+.dash-top-nav a { height: 44px; min-height: 44px; flex: 0 0 auto; }
 @media (prefers-reduced-motion: reduce) {
   .hero-art-spark { animation: none !important; }
 }
+
