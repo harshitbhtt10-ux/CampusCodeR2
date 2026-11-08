@@ -146,9 +146,10 @@ svg { display: block; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 20px; }
 .hero-art { position: relative; display: grid; min-height: 325px; place-items: center; }
 .hero-glow { position: absolute; width: 330px; height: 270px; background: radial-gradient(circle, rgba(168,230,46,.2), rgba(118,101,255,.08) 56%, transparent 72%); }
-.hero-slash { position: absolute; z-index: 0; width: 35px; height: 155px; background: var(--lime); border-radius: 28px; transform: rotate(43deg); opacity: .88; }
-.hero-slash.one { top: 11px; right: 90px; }
-.hero-slash.two { top: 82px; right: 22px; width: 25px; height: 190px; background: #d8ccff; transform: rotate(43deg); }
+.hero-slash { position: absolute; z-index: 0; top: 34px; width: 18px; height: 106px; background: #171622; border-radius: 20px; transform: skew(-25deg); opacity: .95; }
+.hero-slash.one { right: 130px; }
+.hero-slash.two { right: 106px; background: var(--purple); }
+.hero-art::after { position: absolute; z-index: 0; top: 34px; right: 82px; width: 18px; height: 106px; content: ""; background: var(--lime); border-radius: 20px; transform: skew(-25deg); opacity: .95; }
 .laptop {
   position: relative;
   z-index: 1;
@@ -1493,9 +1494,9 @@ body::after { display: none !important; }
 .dash-date-caption { position: relative; z-index: 1; color: #5e5b6d; font-size: 16px; }
 .dash-date-card > strong { position: relative; z-index: 1; font-size: 24px; letter-spacing: -.7px; }
 .dash-date-mark { position: absolute; top: 0; right: 20px; display: flex; gap: 5px; height: 75px; transform: skew(-27deg); }
-.dash-date-mark i { width: 20px; background: linear-gradient(180deg,rgba(118,101,255,.17),rgba(118,101,255,.05)); }
-.dash-date-mark i:nth-child(2) { background: linear-gradient(180deg,rgba(197,185,255,.6),rgba(197,185,255,.12)); }
-.dash-date-mark i:nth-child(3) { background: linear-gradient(180deg,#b8f342,#e2ff99); }
+.dash-date-mark i { width: 20px; background: linear-gradient(180deg,#171622,rgba(23,22,34,.74)); }
+.dash-date-mark i:nth-child(2) { background: linear-gradient(180deg,var(--purple),rgba(118,101,255,.76)); }
+.dash-date-mark i:nth-child(3) { background: linear-gradient(180deg,var(--lime),rgba(168,230,46,.78)); }
 .stat-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; margin-bottom: 0; }
 .stat-card { position: relative; min-height: 104px; gap: 19px; padding: 18px 20px; border-radius: 24px; transition: transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
 .stat-card:hover { border-color: rgba(118,101,255,.42); box-shadow: 0 16px 32px rgba(49,42,94,.1); transform: translateY(-3px); }
