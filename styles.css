@@ -1678,3 +1678,45 @@ body::after { display: none !important; }
   .dashboard-action { min-height: 32px; font-size: 9px; }
   .dashboard-event-actions .status-pill { font-size: 7px; }
 }
+
+/* Give the dashboard hardware and activity surfaces a deliberate 3D finish. */
+.dash-welcome-card { perspective: 1000px; transform-style: preserve-3d; }
+.dash-hero-art { perspective: 950px; perspective-origin: 53% 55%; transform-style: preserve-3d; }
+.hero-laptop { width: 248px; height: 174px; top: 7px; right: 18%; transform-style: preserve-3d; transform: perspective(900px) rotateX(7deg) rotateY(-22deg) rotateZ(-5deg) translateZ(16px); filter: drop-shadow(8px 18px 13px rgba(58,44,136,.23)); }
+.hero-laptop-screen { left: 24px; width: 200px; height: 132px; background: linear-gradient(145deg,#9669ff,#6540ee 72%,#5431df); border: 8px solid #fff; border-bottom-width: 7px; border-radius: 15px 15px 7px 7px; box-shadow: inset 0 0 0 1px rgba(118,101,255,.32),inset -8px 0 12px rgba(32,15,122,.13),0 3px 0 rgba(193,185,226,.9); transform: translateZ(13px); }
+.hero-laptop-screen::before { position: absolute; z-index: -1; top: 4px; right: -11px; bottom: -3px; width: 10px; content: ""; background: linear-gradient(90deg,#6a48eb,#4b32b8); border-radius: 0 7px 7px 0; transform: skewY(-4deg) translateZ(-8px); }
+.hero-laptop-screen::after { position: absolute; top: 5px; left: 50%; width: 4px; height: 4px; content: ""; background: #bbb5d0; border-radius: 50%; transform: translateX(-50%); }
+.hero-laptop-screen span { font-size: 42px; text-shadow: 0 3px 0 rgba(39,22,126,.18),0 8px 16px rgba(32,15,122,.2); transform: translateZ(4px); }
+.hero-laptop-screen i { bottom: 9px; background: linear-gradient(90deg,rgba(255,255,255,.34),rgba(255,255,255,.06)); }
+.hero-laptop-base { bottom: 0; left: -4px; width: 250px; height: 38px; background: linear-gradient(180deg,#fff 0%,#e2e0ef 45%,#b8b5d1 100%); border: 1px solid rgba(151,143,190,.34); border-radius: 4px 4px 18px 18px; box-shadow: inset 0 4px 5px rgba(255,255,255,.88),0 10px 13px rgba(49,38,115,.17); transform: perspective(320px) rotateX(58deg) translateY(5px) translateZ(5px); transform-origin: top center; }
+.hero-laptop-base::before { top: 5px; left: 45px; width: 151px; height: 7px; background: repeating-linear-gradient(90deg,rgba(92,84,131,.36) 0 7px,transparent 7px 10px),linear-gradient(rgba(92,84,131,.17),rgba(92,84,131,.17)); border-radius: 3px; }
+.hero-laptop-base::after { position: absolute; top: 17px; left: 100px; width: 45px; height: 9px; content: ""; background: linear-gradient(180deg,#f4f2fa,#ccc9dc); border: 1px solid rgba(138,131,168,.28); border-radius: 3px 3px 8px 8px; box-shadow: inset 0 1px rgba(255,255,255,.9); }
+.hero-book-stack { transform-style: preserve-3d; transform: perspective(450px) rotateY(-16deg) rotateX(8deg) rotateZ(-7deg); filter: drop-shadow(5px 9px 6px rgba(53,39,129,.15)); }
+.hero-book-stack i { position: relative; height: 17px; border-radius: 5px 8px 8px 5px; box-shadow: inset 0 -4px rgba(80,62,167,.11),inset 0 2px rgba(255,255,255,.55),0 5px 7px rgba(45,34,108,.12); transform: translateZ(4px); }
+.hero-book-stack i:nth-child(2) { transform: translateZ(8px); }
+.hero-book-stack i:nth-child(3) { transform: translateZ(12px); }
+.hero-mug { border-radius: 8px 8px 15px 15px; box-shadow: inset 5px 2px 5px rgba(255,255,255,.7),inset -4px -5px 7px rgba(96,145,13,.17),0 9px 13px rgba(48,52,19,.17); transform: perspective(180px) rotateY(15deg) rotateX(-5deg) rotateZ(-6deg) translateZ(19px); }
+.hero-mug::before { position: absolute; top: 1px; right: 3px; left: 3px; height: 6px; content: ""; background: rgba(246,255,224,.75); border-radius: 50%; }
+.stat-card { transform-style: preserve-3d; box-shadow: 0 8px 0 rgba(118,101,255,.035),0 16px 29px rgba(49,42,94,.06); }
+.stat-icon { box-shadow: inset 0 2px 4px rgba(255,255,255,.88),0 7px 12px rgba(99,81,198,.11); transform: translateZ(6px); }
+.dashboard-event-date { border: 1px solid rgba(118,101,255,.08); box-shadow: inset 0 2px 5px rgba(255,255,255,.9),0 8px 14px rgba(68,54,150,.09); transform: perspective(380px) rotateY(8deg) rotateX(2deg) translateZ(6px); }
+.dashboard-feature-event { perspective: 850px; transform-style: preserve-3d; box-shadow: inset 0 2px 0 rgba(255,255,255,.9),0 12px 24px rgba(65,48,152,.045); }
+.dashboard-feature-copy { transform: translateZ(7px); }
+.dashboard-feature-art { perspective: 800px; transform-style: preserve-3d; }
+.ai-stack { transform-style: preserve-3d; transform: translate(-50%,-50%) rotateX(8deg) rotateY(-16deg); filter: drop-shadow(0 18px 17px rgba(88,63,175,.22)); }
+.ai-stack-top { transform: translateZ(22px); box-shadow: inset 0 3px rgba(255,255,255,.92); }
+.ai-stack-mid { filter: drop-shadow(0 6px 1px rgba(111,80,222,.16)); }
+.ai-stack-bottom { filter: drop-shadow(0 9px 2px rgba(105,151,16,.14)); }
+.feature-float { transform: translateZ(22px) rotate(-5deg); box-shadow: inset 0 2px 4px rgba(255,255,255,.85),0 11px 18px rgba(65,52,140,.14); }
+.feature-bot { transform: translateZ(30px) rotate(5deg); }
+.feature-bars { transform: translateZ(30px) rotate(5deg); }
+@media (max-width: 1050px) {
+  .hero-laptop { right: 8%; transform: perspective(900px) rotateX(7deg) rotateY(-22deg) rotateZ(-5deg) translateZ(16px) scale(.78); }
+}
+@media (max-width: 760px) {
+  .hero-laptop { top: -7px; right: 9%; transform: perspective(900px) rotateX(7deg) rotateY(-22deg) rotateZ(-5deg) translateZ(16px) scale(.58); }
+  .hero-book-stack { transform: perspective(450px) rotateY(-16deg) rotateX(8deg) rotateZ(-7deg) scale(.72); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-art-spark { animation: none !important; }
+}
