@@ -1450,7 +1450,7 @@ body::after { display: none !important; }
 .side-promo { position: relative; min-height: 245px; margin: auto -25px -22px; padding: 29px 28px 24px 63px; overflow: hidden; background: radial-gradient(ellipse at 82% 80%,rgba(118,101,255,.11),transparent 45%); border: 1px solid rgba(118,101,255,.11); border-right: 0; border-bottom: 0; border-radius: 95px 0 0 0; }
 .side-promo::before,.side-promo::after { position: absolute; inset: 8px -20px -54px 34px; content: ""; border: 1px solid rgba(118,101,255,.18); border-radius: 45% 55% 0 0; transform: rotate(-18deg); pointer-events: none; }
 .side-promo::after { inset: 40px -12px -72px 64px; border-color: rgba(168,230,46,.32); transform: rotate(15deg); }
-.side-promo-mark { position: relative; z-index: 1; display: flex; gap: 5px; width: 62px; height: 50px; margin-bottom: 15px; transform: skew(-24deg); }
+.side-promo-mark { display: none; }
 .side-promo-mark i { width: 17px; background: linear-gradient(160deg,#b9a8ff,#8167ff); }
 .side-promo-mark i:nth-child(2) { background: linear-gradient(160deg,#ded6ff,#b8a6ff); }
 .side-promo-mark i:nth-child(3) { background: linear-gradient(160deg,#c7f45b,#91d91a); }
